@@ -361,12 +361,55 @@
           </tbody>
         </table>
       </div>
+      <!-- Cobertura de Obra Social -->
+      <div class="card">
+        <div class="card-title" style="margin-bottom: 8px;">
+          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700;">
+            <input type="checkbox" id="tiene-obra-social" onchange="toggleObraSocial(this)" style="width: 16px; height: 16px; accent-color: var(--primary);">            ¿Aplica Obra Social / Cobertura?
+          </label>
+        </div>
+        <!-- Contenedor que aparece al rellenar -->
+        <div id="obra-wrap" style="display:none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);">
+          <div class="client-row" style="margin-bottom: 0;">
+            <div>
+              <span class="label-sm">Seleccionar Obra Social</span>
+              <select class="form-select">
+                <option>OSDE</option>
+                <option>Swiss Medical</option>
+                <option>PAMI</option>
+                <option>IOMA</option>
+                <option>Galeno</option>
+              </select>
+            </div>
+            <div>
+              <span class="label-sm">N° de afiliado</span>
+              <input type="text" class="form-input" placeholder="Número de afiliado" />
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Validación de Receta (Dinámico) -->
+      <div class="card" id="card-receta" style="display: none; border-left: 4px solid #d97706; background: #fffcf5;">
+        <div class="card-title" style="color: #b45309; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+          <span style="display: flex; align-items: center; gap: 6px; font-weight: 700;">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Atención: Venta bajo receta requerida
+          </span>
+          <button type="button" onclick="agregarCamposReceta()" class="btn-secondary" style="height: 26px; padding: 0 8px; font-size: 11px; border-color: #d97706; color: #b45309; background: transparent;">
+            + Añadir Receta
+          </button>
+        </div>
+        <p style="font-size: 11.5px; color: #78350f; margin-bottom: 12px;">Cargue y valide las matrículas de los profesionales firmantes:</p>
+        
+        <div id="contenedor-recetas-lista" style="display: flex; flex-direction: column; gap: 12px;">
+          </div>
+      </div>
       <!-- Nota -->
       <div class="card">
         <div class="card-title">Nota interna</div>
         <textarea class="form-input" id="nota-interna" style="height:70px;padding:10px;resize:none;" placeholder="Observaciones de la venta..."></textarea>
       </div>
-    </div>
+  </div>
 <!-- PANEL DERECHO: Pago -->
 <div style="display:flex;flex-direction:column;gap:14px;">
 
@@ -386,10 +429,6 @@
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
         Crédito
       </div>
-      <div class="method-opt" onclick="selectMethod(this)" data-method="Obra social">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H10a2 2 0 00-2 2v16a2 2 0 002 2h4a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M6 12h12M12 6v12"/></svg>
-        Obra social
-      </div>
     </div>
 
     <!-- Desplegable de Cuotas -->
@@ -402,37 +441,15 @@
         <option>12 cuotas</option>
       </select>
     </div>
-
-    <!-- Desplegable de Obra Social -->
-    <div id="obra-wrap" style="display:none; margin-top:14px;">
-      <span class="label-sm">Seleccionar Obra Social</span>
-      <select class="form-select" style="margin-bottom: 10px;">
-        <option>OSDE</option>
-        <option>Swiss Medical</option>
-        <option>PAMI</option>
-        <option>IOMA</option>
-        <option>Galeno</option>
-      </select>
-      <span class="label-sm">N° de afiliado</span>
-      <input type="text" class="form-input" placeholder="Número de afiliado" />
-    </div>
   </div>
 
   <!-- Resumen de Venta -->
   <div class="card">
     <div class="card-title">Resumen de venta</div>
     
-    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
-      <span class="label-sm" style="margin: 0;">Descuento</span>
-      <div style="display: flex; align-items: center; gap: 4px;">
-        <input type="number" id="descuento" class="form-input" value="0" min="0" max="100" style="width:70px; height: 28px; padding: 0 6px;" oninput="renderCart()" />
-        <span style="font-size:12px; font-weight: 600; color: var(--text-sec);">%</span>
-      </div>
-    </div>
-
     <div class="mini-summary">
       <div class="mini-row"><span>Subtotal</span><span id="subtotal-val">$0,00</span></div>
-      <div class="mini-row"><span>Descuento</span><span id="descuento-val" style="color:#dc2626;">— $0,00</span></div>
+      <div class="mini-row"><span>Descuento OS</span><span id="descuento-val" style="color:#dc2626;">— $0,00</span></div>
       <div class="mini-row"><span>IVA (21%)</span><span id="iva-val">$0,00</span></div>
       <div class="mini-total">
         <span class="mini-total-label">Total</span>
@@ -445,7 +462,6 @@
           💳 ¡Apoye la tarjeta sobre el posnet!
         </div>
       </div>
-
     </div>
 
     <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:8px;" onclick="openConfirmModal()">
@@ -955,17 +971,18 @@
 
       <div class="modal-total-area">
         <div class="modal-total-row"><span>Subtotal</span><span id="modal-subtotal">$0,00</span></div>
+        
+        <div class="modal-total-row"><span>Descuento OS</span><span id="modal-descuento" style="color:#dc2626;">— $0,00</span></div>
+        
         <div class="modal-total-row"><span>IVA (21%)</span><span id="modal-iva">$0,00</span></div>
         <div class="modal-grand">
           <span class="modal-grand-label">Total a cobrar</span>
           <span class="modal-grand-amount" id="modal-total">$0,00</span>
         </div>
 
-        <!-- IDs únicos exclusivos para el modal -->
         <div id="modal-credito-info" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); text-align: right;">
           <div class="modal-total-row" style="font-weight: 600;"><span id="modal-cuotas-detalle">1 cuota de</span><span id="modal-cuotas-valor">$0,00</span></div>
         </div>
-
       </div>
     </div>
     <div class="modal-footer-wrap" style="display: flex; gap: 8px;">

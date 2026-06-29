@@ -263,19 +263,19 @@ function updateFontPreview() {
   }
 
 const PRODUCTS = [
-    { id: 1, name: 'Ibuprofeno 400mg', price: 850, stock: 5 },
-    { id: 2, name: 'Aspirina 500mg', price: 420, stock: 18 },
-    { id: 3, name: 'Amoxicilina 500mg', price: 1200, stock: 22 },
-    { id: 4, name: 'Paracetamol 500mg', price: 380, stock: 145 },
-    { id: 5, name: 'Omeprazol 20mg', price: 920, stock: 67 },
-    { id: 6, name: 'Losartán 50mg', price: 1650, stock: 89 },
-    { id: 7, name: 'Paracetamol 500mg x 16 comp', price: 980, stock: 8 },
-    { id: 8, name: 'Loratadina 10mg x 10 comp', price: 1540, stock: 5 },
-    { id: 9, name: 'Vitamina C 1000mg x 30 comp', price: 2750, stock: 60 },
-    { id: 10, name: 'Termómetro digital', price: 4500, stock: 12 },
-    { id: 11, name: 'Alcohol en gel 500ml', price: 1200, stock: 3 },
-    { id: 12, name: 'Diclofenac 50mg x 20 comp', price: 2300, stock: 18 }
-  ];
+    { id: 1, name: 'Ibuprofeno 400mg', price: 850, stock: 5, cobertura: 40, requiereReceta: true },
+    { id: 2, name: 'Aspirina 500mg', price: 420, stock: 18, cobertura: 40, requiereReceta: false },
+    { id: 3, name: 'Amoxicilina 500mg', price: 1200, stock: 22, cobertura: 70, requiereReceta: true },
+    { id: 4, name: 'Paracetamol 500mg', price: 380, stock: 145, cobertura: 40, requiereReceta: false },
+    { id: 5, name: 'Omeprazol 20mg', price: 920, stock: 67, cobertura: 70, requiereReceta: false },
+    { id: 6, name: 'Losartán 50mg', price: 1650, stock: 89, cobertura: 100, requiereReceta: true },
+    { id: 7, name: 'Paracetamol 500mg x 16 comp', price: 980, stock: 8, cobertura: 40, requiereReceta: false },
+    { id: 8, name: 'Loratadina 10mg x 10 comp', price: 1540, stock: 5, cobertura: 40, requiereReceta: false },
+    { id: 9, name: 'Vitamina C 1000mg x 30 comp', price: 2750, stock: 60, cobertura: 0, requiereReceta: false },
+    { id: 10, name: 'Termómetro digital', price: 4500, stock: 12, cobertura: 0, requiereReceta: false },
+    { id: 11, name: 'Alcohol en gel 500ml', price: 1200, stock: 3, cobertura: 0, requiereReceta: false },
+    { id: 12, name: 'Diclofenac 50mg x 20 comp', price: 2300, stock: 18, cobertura: 40, requiereReceta: true }
+];
   
   let cart = [];
   let selectedMethod = 'Efectivo';
@@ -329,7 +329,12 @@ const PRODUCTS = [
     showToast('Venta cancelada');
   }
   
-  function renderCart() {
+function renderCart() {
+    // Freno de seguridad por si estamos en otra sección
+    if (!document.getElementById('cart-tbody') || !document.getElementById('item-counter')) {
+        return; 
+    }
+    
     const tbody = document.getElementById('cart-tbody');
     const counter = document.getElementById('item-counter');
     const totalItems = cart.reduce((s, c) => s + c.qty, 0);
@@ -339,28 +344,70 @@ const PRODUCTS = [
       tbody.innerHTML = `<tr id="cart-empty"><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted);font-size:12px;">
         <svg style="display:block;margin:0 auto 8px;color:var(--border);" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
         Ningún producto agregado aún</td></tr>`;
-      updateTotals(0);
+      updateTotals(0, 0); // Pasamos ceros porque está vacío
       return;
     }
   
-    let subtotal = 0;
+    const obraSocialActiva = document.getElementById('tiene-obra-social')?.checked || false;
+    
+    // Variables para sumar los montos
+    let subtotalOriginal = 0;
+    let descuentoTotal = 0;
+
     tbody.innerHTML = cart.map(item => {
-      const sub = item.price * item.qty;
-      subtotal += sub;
+      const descuentoPorcentaje = obraSocialActiva ? (item.cobertura || 0) : 0;
+      
+      const precioUnitario = item.price;
+      const subOriginal = precioUnitario * item.qty;
+      const montoDescontado = subOriginal * (descuentoPorcentaje / 100);
+      const subFinal = subOriginal - montoDescontado;
+      
+      subtotalOriginal += subOriginal;
+      descuentoTotal += montoDescontado;
+
+      const badgeCobertura = (obraSocialActiva && descuentoPorcentaje > 0) 
+        ? `<span class="pill" style="background:#e6f9f0; color:#00925e; border-color:#00925e; font-size:10px; margin-left:6px;">-${descuentoPorcentaje}% OS</span>` 
+        : '';
+
+      const badgeReceta = item.requiereReceta 
+        ? `<span class="pill" style="background:#fee2e2; color:#dc2626; border-color:#fca5a5; font-size:10px; margin-left:4px;">Receta</span>` 
+        : '';
+
       return `<tr>
-        <td style="font-size:12px;font-weight:500;">${item.name}</td>
-        <td style="font-size:12px;">$${item.price.toLocaleString('es-AR')}</td>
+        <td style="font-size:12px;font-weight:500;">${item.name} ${badgeCobertura} ${badgeReceta}</td>
+        <td style="font-size:12px;">$${precioUnitario.toLocaleString('es-AR')}</td>
         <td><div class="qty-ctrl">
           <button class="qty-btn" onclick="changeQty(${item.id},-1)">−</button>
           <span class="qty-num">${item.qty}</span>
           <button class="qty-btn" onclick="changeQty(${item.id},1)">+</button>
         </div></td>
-        <td style="font-size:12px;font-weight:700;color:var(--primary);">$${sub.toLocaleString('es-AR')}</td>
+        <td style="font-size:12px;font-weight:700;color:var(--primary);">$${subFinal.toLocaleString('es-AR')}</td>
         <td><button class="remove-btn" onclick="removeFromCart(${item.id})">✕</button></td>
       </tr>`;
     }).join('');
-    updateTotals(subtotal);
-  }
+    
+    // Validación de Receta
+    const requiereRecetaGlobal = cart.some(item => item.requiereReceta);
+    const cardReceta = document.getElementById('card-receta');
+    if (cardReceta) {
+        if (requiereRecetaGlobal) {
+            cardReceta.style.display = 'block';
+            const lista = document.getElementById('contenedor-recetas-lista');
+            if (lista && lista.children.length === 0) {
+                contadorRecetas = 0; 
+                agregarCamposReceta();
+            }
+        } else {
+            cardReceta.style.display = 'none';
+            const lista = document.getElementById('contenedor-recetas-lista');
+            if (lista) lista.innerHTML = ''; 
+            contadorRecetas = 0;
+        }
+    }
+
+    // Le pasamos el monto en crudo y la suma de la bonificación
+    updateTotals(subtotalOriginal, descuentoTotal);
+}
   
   
 function selectMethod(el) {
@@ -368,9 +415,8 @@ function selectMethod(el) {
     el.classList.add('active');
     selectedMethod = el.dataset.method;
     
-    // Mostrar u ocultar paneles basándose en IDs corregidos
+    // El manejo de cuotas se queda acá para cuando eligen Crédito
     document.getElementById('cuotas-wrap').style.display = (selectedMethod === 'Tarjeta crédito') ? 'block' : 'none';
-    document.getElementById('obra-wrap').style.display = (selectedMethod === 'Obra social') ? 'block' : 'none';
     
     if (document.getElementById('modal-method')) {
         document.getElementById('modal-method').textContent = selectedMethod;
@@ -379,7 +425,19 @@ function selectMethod(el) {
     if (typeof cart !== 'undefined') {
       renderCart(); 
     }
-  }
+}
+
+// Nueva función para controlar el cuadro dinámico abajo de productos
+function toggleObraSocial(checkbox) {
+    const obraWrap = document.getElementById('obra-wrap');
+    
+    if (obraWrap) {
+        obraWrap.style.display = checkbox.checked ? 'block' : 'none';
+    }
+    
+    // Al cambiar el estado de la mutual, obligamos a renderizar para aplicar o quitar coberturas
+    renderCart();
+}
   
 // function updateTotals(subtotal) {
 //     const descInput = document.getElementById('descuento');
@@ -427,47 +485,43 @@ function selectMethod(el) {
 //     }
 //   }
 
-function updateTotals(subtotal) {
-    const descInput = document.getElementById('descuento');
-    const porcDescuento = descInput ? Math.max(0, Math.min(100, parseFloat(descInput.value) || 0)) : 0;
-    
-    const montoDescuento = subtotal * (porcDescuento / 100);
-    const subtotalConDesc = subtotal - montoDescuento;
+function updateTotals(subtotalOriginal, descuentoTotal) {
+    const subtotalConDesc = subtotalOriginal - descuentoTotal;
     const iva = subtotalConDesc * 0.21;
     const total = subtotalConDesc + iva;
     
     const fmt = n => '$' + n.toLocaleString('es-AR', {minimumFractionDigits:2, maximumFractionDigits:2});
     
-    document.getElementById('subtotal-val').textContent = fmt(subtotal);
-    document.getElementById('descuento-val').textContent = '— ' + fmt(montoDescuento);
+    document.getElementById('subtotal-val').textContent = fmt(subtotalOriginal);
+    document.getElementById('descuento-val').textContent = '— ' + fmt(descuentoTotal);
     document.getElementById('iva-val').textContent = fmt(iva);
     document.getElementById('total-val').textContent = fmt(total);
     
     if (document.getElementById('modal-subtotal')) {
-        document.getElementById('modal-subtotal').textContent = fmt(subtotal);
+        document.getElementById('modal-subtotal').textContent = fmt(subtotalOriginal);
+        
+        // 👇 ESTA LÍNEA ES LA QUE AGREGA EL DATO AL MODAL 👇
+        const modDesc = document.getElementById('modal-descuento');
+        if (modDesc) modDesc.textContent = '— ' + fmt(descuentoTotal);
+
         document.getElementById('modal-iva').textContent = fmt(iva);
         document.getElementById('modal-total').textContent = fmt(total);
     }
   
-    // --- Lógica del Cálculo de Cuotas Corregida ---
+    // Lógica del Cálculo de Cuotas
     const resCreditoInfo = document.getElementById('resumen-credito-info');
     const selectCuotas = document.getElementById('cuotas'); 
   
     if (selectedMethod === 'Tarjeta crédito' && selectCuotas) {
       const textoCuota = selectCuotas.value;
-      
-      // Buscamos el número exacto dentro del texto (ej: "3 cuotas" -> 3)
       const coincidencias = textoCuota.match(/\d+/);
       const cantidadCuotas = coincidencias ? parseInt(coincidencias[0]) : 1; 
-      
       const valorCuota = total / cantidadCuotas;
   
-      // Actualizar Panel Lateral Resumen
       document.getElementById('resumen-cuotas-detalle').textContent = `${cantidadCuotas} ${cantidadCuotas === 1 ? 'cuota' : 'cuotas'} de`;
       document.getElementById('resumen-cuotas-valor').textContent = fmt(valorCuota);
       if (resCreditoInfo) resCreditoInfo.style.display = 'block';
   
-      // Preparar el Modal
       if (document.getElementById('modal-cuotas-detalle')) {
         document.getElementById('modal-cuotas-detalle').textContent = `${cantidadCuotas} ${cantidadCuotas === 1 ? 'cuota' : 'cuotas'} de`;
         document.getElementById('modal-cuotas-valor').textContent = fmt(valorCuota);
@@ -478,14 +532,37 @@ function updateTotals(subtotal) {
 }
   
   // Modificación extra para limpiar el input de descuento al reiniciar el carrito
-  const originalResetCart = resetCart;
-  resetCart = function() {
-    const descInput = document.getElementById('descuento');
-    if (descInput) descInput.value = 0;
-    originalResetCart();
-  };
+function resetCart() {
+    cart = [];
+    renderCart();
+    showToast('Venta cancelada');
+}
 
 function openConfirmModal() {
+    // --- NUEVO: Freno de seguridad para recetas ---
+    const requiereRecetaGlobal = cart.some(item => item.requiereReceta);
+    if (requiereRecetaGlobal) {
+        let todasValidadas = true;
+        const bloquesReceta = document.querySelectorAll('[id^="bloque-receta-"]');
+        
+        // Si no hay bloques generados (raro, pero por las dudas) o si alguno no está en "readOnly" (validado)
+        if (bloquesReceta.length === 0) todasValidadas = false;
+        
+        bloquesReceta.forEach(bloque => {
+            // Buscamos el input de matrícula dentro de este bloque específico
+            const inputMatricula = bloque.querySelector('input[id^="medico-matricula-"]');
+            if (inputMatricula && !inputMatricula.readOnly) {
+                todasValidadas = false;
+            }
+        });
+
+        if (!todasValidadas) {
+            showToast('⚠️ Falta validar la matrícula del médico', 'warning');
+            return; // Cortamos la ejecución acá, el modal no se abre
+        }
+    }
+    // ----------------------------------------------
+
     // 1. Lógica del Nombre del Cliente
     const inputNombre = document.getElementById('nombre-cliente');
     const modalNombre = document.getElementById('nombrecliente');
@@ -502,14 +579,14 @@ function openConfirmModal() {
       modalNota.textContent = notaEscrita !== "" ? notaEscrita : "";
     }
   
-    // 3. NUEVO: Setear Fecha Actual Dinámica
+    // 3. Setear Fecha Actual Dinámica
     const modalFecha = document.getElementById('modal-fecha');
     if (modalFecha) {
       const hoy = new Date();
       modalFecha.textContent = hoy.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
     }
   
-    // 4. NUEVO: Capturar Vendedor de la sesión (busca la interfaz del footer si cambia)
+    // 4. Capturar Vendedor de la sesión
     const userLabel = document.querySelector('.user-name');
     const modalVendedor = document.getElementById('modal-vendedor');
     if (userLabel && modalVendedor) {
@@ -517,14 +594,16 @@ function openConfirmModal() {
     }
   
     // 5. Configurar método de pago y visibilidad del posnet en modal
-    document.getElementById('modal-method').textContent = selectedMethod;
+    const methodModal = document.getElementById('modal-method');
+    if (methodModal) methodModal.textContent = selectedMethod;
+    
     const modalCreditoInfo = document.getElementById('modal-credito-info');
     if (modalCreditoInfo) {
       modalCreditoInfo.style.display = (selectedMethod === 'Tarjeta crédito') ? 'block' : 'none';
     }
   
     document.getElementById('confirm-modal').classList.add('open');
-  }
+}
 
   
   function closeModal() {
@@ -894,3 +973,81 @@ function openConfirmModal() {
       });
     }
 });
+
+let contadorRecetas = 0;
+
+// Función para inyectar un nuevo bloque de receta/médico
+function agregarCamposReceta() {
+    contadorRecetas++;
+    const lista = document.getElementById('contenedor-recetas-lista');
+    if (!lista) return;
+
+    const divReceta = document.createElement('div');
+    divReceta.id = `bloque-receta-${contadorRecetas}`;
+    divReceta.style.cssText = "padding: 10px; background: var(--surface); border: 1px solid #fcd34d; border-radius: 8px; position: relative;";
+
+    divReceta.innerHTML = `
+        <span style="font-size: 10.5px; font-weight: 800; color: #b45309; text-transform: uppercase; display: block; margin-bottom: 6px;">
+            Receta N° ${contadorRecetas}
+            ${contadorRecetas > 1 ? `<span onclick="eliminarBloqueReceta(${contadorRecetas})" style="color: #dc2626; float: right; cursor: pointer; font-size: 11px; font-weight: 600;">✕ Quitar</span>` : ''}
+        </span>
+        <div class="client-row" style="margin-bottom: 0; display: flex; gap: 8px; align-items: flex-end;">
+            <div style="flex: 2;">
+                <span class="label-sm" style="color: #78350f;">Médico Prescriptor</span>
+                <input type="text" class="form-input" id="medico-nombre-${contadorRecetas}" placeholder="Carga automática al validar..." readonly style="background: var(--surface-2); border-color: #cbd5e1;">
+            </div>
+            <div style="flex: 1.5; position: relative;">
+                <span class="label-sm" style="color: #78350f;">M.N. / M.P. N°</span>
+                <input type="text" class="form-input" id="medico-matricula-${contadorRecetas}" placeholder="Ej: 145872" style="border-color: #f59e0b; padding-right: 30px;">
+            </div>
+            <div style="flex: 1;">
+                <button type="button" id="btn-valida-${contadorRecetas}" onclick="validarMatriculaReal(${contadorRecetas})" class="btn-primary" style="height: 36px; width: 100%; justify-content: center; background: #d97706; font-size: 12px; padding: 0;">
+                    Validar
+                </button>
+            </div>
+        </div>
+    `;
+    lista.appendChild(divReceta);
+}
+
+function eliminarBloqueReceta(id) {
+    const bloque = document.getElementById(`bloque-receta-${id}`);
+    if (bloque) bloque.remove();
+}
+
+// Simulación pro de pegada a API externa de Salud
+function validarMatriculaReal(id) {
+    const matriculaInput = document.getElementById(`medico-matricula-${id}`);
+    const nombreInput = document.getElementById(`medico-nombre-${id}`);
+    const btn = document.getElementById(`btn-valida-${id}`);
+    
+    if (!matriculaInput || !matriculaInput.value.trim()) {
+        showToast('⚠️ Ingrese un número de matrícula para validar', 'warning');
+        return;
+    }
+
+    // Efecto visual de spinner/loading en el botón
+    const textoOriginal = btn.innerHTML;
+    btn.disabled = true;
+    btn.style.background = '#b45309';
+    btn.innerHTML = `<span style="display:inline-block; animation: spin 1s infinite linear; font-weight:bold;">⏳</span>`;
+
+    // Nombres aleatorios de doctores para la simulación
+    const medicosFake = ["Dr. Carlos Salvador Bilardo", "Dra. René Favaloro", "Dr. Claudio Zin", "Dra. Mariana Román", "Dr. Esteban Quito"];
+    const nombreAleatorio = medicosFake[Math.floor(Math.random() * medicosFake.length)];
+
+    setTimeout(() => {
+        // Volvemos el botón al estado original pero en verde (éxito)
+        btn.disabled = false;
+        btn.innerHTML = "✓ Ok";
+        btn.style.background = "#00925e";
+        btn.style.borderColor = "#00925e";
+        
+        // Seteamos el nombre simulando que la base de datos respondió
+        nombreInput.value = nombreAleatorio;
+        matriculaInput.style.borderColor = "#00925e";
+        matriculaInput.readOnly = true;
+
+        showToast(`📡 SISA: Matrícula ${matriculaInput.value} habilitada · ${nombreAleatorio}`, 'success');
+    }, 1200); // 1.2 segundos de delay ficticio de red
+}

@@ -41,3 +41,8 @@
 .method-opt.active { border-color: var(--primary); background: rgba(0,122,142,.08); color: var(--primary); }
 .method-opt:hover:not(.active) { border-color: var(--secondary); color: var(--primary); }
 .method-opt svg { width: 18px; height: 18px; }
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
