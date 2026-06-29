@@ -1,0 +1,107 @@
+
+/* ══════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════ */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 300px 1fr 210px;
+    grid-template-rows: auto 1fr;
+    gap: 16px;
+  }
+  
+  /* KPI clickable stat cards */
+  .stat-card {
+    background: var(--surface);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 18px;
+    cursor: pointer;
+    transition: box-shadow .2s, transform .15s, background .25s;
+    display: flex; flex-direction: column; gap: 4px;
+    border: 2px solid transparent;
+  }
+  .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); border-color: var(--primary); }
+  .stat-card-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); }
+  .stat-card-value { font-size: 30px; font-weight: 800; color: var(--primary); line-height: 1; }
+  .stat-card-sub { font-size: 12px; color: var(--text-sec); }
+  .stat-card-delta { font-size: 12px; font-weight: 600; color: #00925e; display: flex; align-items: center; gap: 3px; }
+  .stat-card-delta svg { width: 13px; height: 13px; }
+  
+  .stats-row { display: flex; gap: 14px; margin-bottom: 2px; }
+  .stats-row .stat-card { flex: 1; }
+  
+  /* Alert items */
+  .alert-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 11px;
+    background: var(--surface-2); border-radius: 8px;
+    margin-bottom: 7px; border: 1px solid var(--border);
+    transition: background .15s; cursor: pointer;
+  }
+  .alert-item:last-of-type { margin-bottom: 0; }
+  .alert-item:hover { background: var(--hover-row); }
+  .alert-bar { width: 4px; height: 36px; border-radius: 2px; flex-shrink: 0; }
+  .alert-bar.red { background: #dc2626; }
+  .alert-bar.orange { background: #d97706; }
+  .alert-body { flex: 1; min-width: 0; }
+  .alert-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
+  .alert-desc { font-size: 11.5px; margin-top: 1px; }
+  .alert-desc.red { color: #dc2626; }
+  .alert-desc.orange { color: #d97706; }
+  .alert-action {
+    width: 28px; height: 28px; border-radius: 6px;
+    background: transparent; border: 1.5px solid var(--border);
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    color: var(--text-muted); transition: all .15s; flex-shrink: 0;
+  }
+  .alert-action:hover { border-color: var(--primary); color: var(--primary); }
+  .alert-action svg { width: 13px; height: 13px; }
+  .alert-footer { margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); display: flex; align-items: center; gap: 6px; }
+  .alert-footer svg { width: 13px; height: 13px; }
+  
+  /* Chart */
+  .chart-card { grid-column: 2; grid-row: 1; }
+  .chart-area { display: flex; align-items: flex-end; gap: 5px; height: 110px; padding: 0 4px; gap: 16px;justify-content: center;}
+  .bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; max-width: 36px;}
+  .bar { width: 100%; border-radius: 10px 10px 0 0; background: var(--secondary); transition: opacity .15s; cursor: pointer; min-height: 4px; }
+  .bar:hover { opacity: .7; }
+  .bar.highlight { background: var(--primary); }
+  .bar-label { font-size: 10px; color: var(--text-muted); font-weight: 500; }
+  .chart-legend { display: flex; gap: 14px; margin-top: 10px; font-size: 11.5px; color: var(--text-sec); border-top: 1px solid var(--border); padding-top: 10px; }
+  .legend-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-right: 4px; }
+  
+  /* KPI card */
+  .kpi-card { grid-column: 3; grid-row: 1; cursor: pointer; }
+  .kpi-value { font-size: 48px; font-weight: 800; color: var(--primary); line-height: 1; margin: 10px 0 6px; }
+  .kpi-delta { font-size: 13px; color: #00925e; font-weight: 600; display: flex; align-items: center; gap: 3px; }
+  .kpi-delta svg { width: 14px; height: 14px; }
+  .kpi-sub { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+  
+  /* Activity */
+  .activity-card { grid-column: 1; grid-row: 2; }
+  .activity-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .activity-item:last-child { border-bottom: none; padding-bottom: 0; }
+  .act-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--surface-2); flex-shrink: 0; display: flex; align-items: center; justify-content: center; border: 1.5px solid var(--border); }
+  .act-avatar svg { width: 17px; height: 17px; color: var(--text-muted); }
+  .act-avatar.online { border-color: #00b87a; }
+  .act-info { flex: 1; min-width: 0; }
+  .act-name { font-size: 13px; font-weight: 600; color: var(--text-main); }
+  .act-time { font-size: 11px; color: var(--text-muted); margin-top: 1px; }
+  .online-dot { width: 8px; height: 8px; border-radius: 50%; background: #00b87a; flex-shrink: 0; }
+  
+  /* Sales table */
+  .sales-card { grid-column: 2 / 4; grid-row: 2; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { border-bottom: 2px solid var(--border); }
+  th { padding: 8px 13px; text-align: left; font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .4px; white-space: nowrap; }
+  tbody tr { border-bottom: 1px solid var(--border); transition: background .12s; cursor: pointer; }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--hover-row); }
+  tbody tr:hover td:first-child { border-left: 3px solid var(--primary); padding-left: 10px; }
+  td { padding: 9px 13px; vertical-align: middle; border-left: 3px solid transparent; transition: padding .1s, border-color .1s; color: var(--text-main); }
+  .factura-id { font-weight: 700; color: var(--primary); font-family: monospace; }
+  .monto { font-weight: 700; color: var(--text-main); }
+  .badge-sm { display: inline-block; padding: 3px 8px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  .badge-ok  { background: #e6f9f0; color: #00925e; }
+  .badge-pen { background: #fff8e5; color: #d97706; }
+  

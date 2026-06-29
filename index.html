@@ -1,0 +1,996 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BieneStar — Sistema de Gestión</title>
+
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/inicio.css">
+    <link rel="stylesheet" href="css/inventario.css">
+    <link rel="stylesheet" href="css/ventas.css">
+    <link rel="stylesheet" href="css/historial.css">
+    <link rel="stylesheet" href="css/configuracion.css">
+
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar" aria-label="Navegación principal">
+  <div class="sidebar-brand">
+      <a class="brando-logo" href="image.png" rel="tooltip" title="logo biene-star" >
+        <img class="logo-img" src="image.png" style="width: 40px; height: 40px;" style= "justify-content: flex-start;"alt="Imagen logo empresa">
+      </a>
+      <line x1="10" y1="32" x2="28" y2="14" stroke="#fff" stroke-width="1.2" stroke-dasharray="2 2"/>
+    <span class="brand-name">Biene<span>Star</span></span>
+
+  </div>
+
+  <nav class="sidebar-nav" id="sidebar-nav" aria-label="Menú principal">
+    <div class="hamburger"  onclick="toggleSidebar()" title="Contraer menú (Ctrl+B)" role="button" tabindex="0" aria-label="Contraer menú">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      <span class="nav-label">Menú</span>
+    </div>
+    <div class="nav-section-label">Principal</div>
+    <div class="nav-item active" data-page="dashboard" onclick="goTo('dashboard')" role="button" tabindex="0" aria-label="Inicio">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      <span class="nav-label">Inicio</span>
+    </div>
+    <div class="nav-item" data-page="ventas" onclick="goTo('ventas')" role="button" tabindex="0" aria-label="Registrar venta">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="nav-label">Registrar Venta</span>
+    </div>
+
+    <div class="nav-section-label">Inventario</div>
+    <div class="nav-item" data-page="inventario" onclick="goTo('inventario')" role="button" tabindex="0" aria-label="Medicamentos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12h6M12 9v6"/></svg>
+      <span class="nav-label">Medicamentos</span>
+      <span class="nav-badge">3</span>
+    </div>
+    <div class="nav-item" data-page="proveedores" onclick="goTo('proveedores')" role="button" tabindex="0" aria-label="Proveedores">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+      <span class="nav-label">Proveedores</span>
+    </div>
+
+    <div class="nav-section-label">Gestión</div>
+    <div class="nav-item" data-page="historial" onclick="goTo('historial')" role="button" tabindex="0" aria-label="Historial de ventas">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+      <span class="nav-label">Historial de Ventas</span>
+    </div>
+    <div class="nav-item" data-page="usuarios" onclick="goTo('usuarios')" role="button" tabindex="0" aria-label="Usuarios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <span class="nav-label">Usuarios</span>
+    </div>
+    <div class="nav-item" data-page="reportes" onclick="goTo('reportes')" role="button" tabindex="0" aria-label="Reportes">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="9 7 4 12 9 17"/><line x1="4" y1="12" x2="15" y2="12"/></svg>
+      <span class="nav-label">Reportes</span>
+    </div>
+    <div class="nav-item" data-page="configuracion" onclick="goTo('configuracion')" role="button" tabindex="0" aria-label="Configuración">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+      <span class="nav-label">Configuración</span>
+    </div>
+  </nav>
+
+  <div class="sidebar-footer">
+    <div class="user-avatar" aria-label="Mario Bros">MB</div>
+    <div class="user-info">
+      <div class="user-name">Mario Bros</div>
+      <div class="user-role">Administrador</div>
+    </div>
+    <button class="logout-btn" title="Cerrar sesión" aria-label="Cerrar sesión" onclick="showToast('Sesión cerrada')">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    </button>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main-wrap">
+  <div class="topstrip">
+    <div class="tabs-container">
+      <div class="tab active" id="dynamic-tab" onclick="goTo(currentPage || 'dashboard')">
+        <span class="tab-icon" id="dynamic-tab-icon">🏠</span>
+        <span class="tab-text" id="dynamic-tab-text">Inicio</span>
+      </div>
+      <!-- Pestaña Inactiva -->
+      <div class="tab" data-page="ventas" onclick="goTo('ventas')">
+        <span class="tab-icon">➕</span>  
+        <span class="tab-text">Nueva Venta</span>
+      </div> 
+    </div>
+    
+    <div class="topstrip-date">Martes, 30 de junio de 2026</div>
+  </div>
+
+  <!-- ═══════════════ DASHBOARD ═══════════════ -->
+  <div class="page active" id="page-dashboard">
+    <h1 class="page-title">Inicio</h1>
+    
+    <div class="dashboard-grid">
+      <!-- Alertas -->
+      <div class="card" style="grid-column:1; grid-row:1;">
+        <div class="card-title">
+          Alertas de inventario
+          <a class="card-title-link" onclick="goTo('inventario')">Ver todas →</a>
+        </div>
+        <div class="alert-item" onclick="goTo('inventario')">
+          <div class="alert-bar red"></div>
+          <div class="alert-body">
+            <div class="alert-name">Ibuprofeno 400mg</div>
+            <div class="alert-desc red">Stock crítico: 5 unidades</div>
+          </div>
+          <button class="alert-action" title="Ir al inventario" onclick="goTo('inventario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          </button>
+        </div>
+        <div class="alert-item" onclick="goTo('inventario')">
+          <div class="alert-bar orange"></div>
+          <div class="alert-body">
+            <div class="alert-name">Aspirina 500mg</div>
+            <div class="alert-desc orange">Vence en 10 días</div>
+          </div>
+          <button class="alert-action" title="Ver detalle" onclick="event.stopPropagation(); goTo('inventario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="alert-item" onclick="goTo('inventario')">
+          <div class="alert-bar orange"></div>
+          <div class="alert-body">
+            <div class="alert-name">Amoxicilina 500mg</div>
+            <div class="alert-desc orange">Vence en 10 días</div>
+          </div>
+          <button class="alert-action" title="Ver detalle" onclick="event.stopPropagation(); goTo('inventario')">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+        <div class="alert-footer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Último pedido: hace 28 días
+        </div>
+      </div>
+
+      <!-- Ventas semana chart -->
+      <div class="card chart-card"  style=" border-radius: 20px;">
+        <div class="card-title" >
+          Ventas de esta semana
+          <a class="card-title-link" onclick="goTo('reportes')">Ver detalle →</a>
+        </div>
+        <div class="chart-area">
+          <div class="bar-wrap"><div class="bar" style="height:62px"></div><span class="bar-label">Lun</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:75px"></div><span class="bar-label">Mar</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:55px"></div><span class="bar-label">Mié</span></div>
+          <div class="bar-wrap"><div class="bar highlight" style="height:88px"></div><span class="bar-label">Jue</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:70px"></div><span class="bar-label">Vie</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:82px"></div><span class="bar-label">Sáb</span></div>
+          <div class="bar-wrap"><div class="bar" style="height:48px"></div><span class="bar-label">Dom</span></div>
+        </div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:var(--secondary)"></span>Ventas diarias</span>
+          <span><span class="legend-dot" style="background:var(--primary)"></span>Día actual</span>
+          <span style="margin-left:auto; color:var(--text-sec); font-weight:600;">Total: $284.600</span>
+        </div>
+      </div>
+
+      <!-- KPI Ventas hoy -->
+      <div class="card kpi-card" onclick="goTo('historial')" role="button" tabindex="0" aria-label="Ventas de hoy, ir a historial" style=" border-radius: 20px; width: 100%;">
+        <div class="card-title" >Ventas de hoy</div>
+        <div class="kpi-value">50</div>
+        <div class="kpi-delta">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="18 15 12 9 6 15"/></svg>
+          +2,5% vs ayer
+        </div>
+        <div class="kpi-sub">47 unidades ayer</div>
+        <div style="margin-top:14px;padding-top:12px;border-top:1px solid var(--border);">
+          <div style="font-size:11px;color:var(--text-muted);font-weight:700;text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">Recaudación hoy</div>
+          <div style="font-size:22px;font-weight:800;color:var(--text-main);">$28.400</div>
+        </div>
+      </div>
+
+      <!-- Actividad -->
+      <div class="card activity-card">
+        <div class="card-title">Última actividad</div>
+        <div class="activity-item">
+          <div class="act-avatar online"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+          <div class="act-info"><div class="act-name">Mario Bros <span style="font-size:11px;color:var(--text-muted);font-weight:400">(tú)</span></div><div class="act-time">Activo ahora</div></div>
+          <div class="online-dot"></div>
+        </div>
+        <div class="activity-item">
+          <div class="act-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+          <div class="act-info"><div class="act-name">María Constanzo</div><div class="act-time">Últ. vez a las 21hs</div></div>
+        </div>
+        <div class="activity-item">
+          <div class="act-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+          <div class="act-info"><div class="act-name">Juan Pérez</div><div class="act-time">Últ. vez a las 13hs</div></div>
+        </div>
+        <div class="activity-item">
+          <div class="act-avatar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg></div>
+          <div class="act-info"><div class="act-name">Laura Gómez</div><div class="act-time">Últ. vez ayer a las 18hs</div></div>
+        </div>
+      </div>
+
+      <!-- Últimas ventas -->
+      <div class="card sales-card">
+        <div class="card-title">
+          Últimas ventas
+          <a class="card-title-link" onclick="goTo('historial')">Ver historial completo →</a>
+        </div>
+        <table>
+          <thead><tr>
+            <th>Nro Factura</th><th>Sucursal</th><th>Vendedor</th><th>Cliente</th><th>Monto</th><th>Estado</th><th>Fecha</th>
+          </tr></thead>
+          <tbody>
+            <tr onclick="goTo('historial')"><td><span class="factura-id">#01AD</span></td><td>Chacabuco</td><td>María Constanzo</td><td>Lionel Messi</td><td><span class="monto">$1.840</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>06/05/2026</td></tr>
+            <tr onclick="goTo('historial')"><td><span class="factura-id">#01AC</span></td><td>Chacabuco</td><td>María Constanzo</td><td>Carlos Tevez</td><td><span class="monto">$3.200</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>06/05/2026</td></tr>
+            <tr onclick="goTo('historial')"><td><span class="factura-id">#01AB</span></td><td>Chacabuco</td><td>Juan Pérez</td><td>Sergio Agüero</td><td><span class="monto">$970</span></td><td><span class="badge-sm badge-pen">Pendiente</span></td><td>06/05/2026</td></tr>
+            <tr onclick="goTo('historial')"><td><span class="factura-id">#01AA</span></td><td>Chacabuco</td><td>María Constanzo</td><td>Pablo Aimar</td><td><span class="monto">$5.600</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>06/05/2026</td></tr>
+            <tr onclick="goTo('historial')"><td><span class="factura-id">#019Z</span></td><td>Chacabuco</td><td>Laura Gómez</td><td>Lionel Messi</td><td><span class="monto">$2.150</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>05/05/2026</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ INVENTARIO ═══════════════ -->
+  <div class="page" id="page-inventario">
+    <h1 class="page-title">Medicamentos</h1>
+    <div class="card">
+      <div class="inv-toolbar">
+        <input class="search-input" type="search" placeholder="Buscar medicamento..." aria-label="Buscar medicamento">
+        <select class="filter-select" aria-label="Filtrar por categoría">
+          <option>Todas las categorías</option>
+          <option>Analgésicos</option>
+          <option>Antibióticos</option>
+          <option>Antiinflamatorios</option>
+        </select>
+        <select class="filter-select" aria-label="Filtrar por estado">
+          <option>Todos los estados</option>
+          <option>Stock OK</option>
+          <option>Stock bajo</option>
+          <option>Sin stock</option>
+        </select>
+        <button class="btn-primary" onclick="showToast('Medicamento agregado')">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Agregar
+        </button>
+      </div>
+    </div>
+    <div class="card" style="padding:0; overflow:hidden;">
+      <table>
+        <thead><tr>
+          <th>Nombre</th><th>Categoría</th><th>Presentación</th><th>Stock</th><th>P. Venta</th><th>Vencimiento</th><th>Estado</th><th>Acciones</th>
+        </tr></thead>
+        <tbody>
+          <tr><td><strong>Ibuprofeno 400mg</strong></td><td>Antiinflamatorio</td><td>Caja 20 comp.</td><td style="color:#dc2626;font-weight:700">5</td><td>$850</td><td>15/12/2026</td><td><span class="stock-badge stock-out">Crítico</span></td><td><button class="btn-secondary" style="height:28px;font-size:11px;padding:0 10px;" onclick="showToast('Pedido realizado')">Reponer</button></td></tr>
+          <tr><td><strong>Aspirina 500mg</strong></td><td>Analgésico</td><td>Caja 10 comp.</td><td style="color:#d97706;font-weight:700">18</td><td>$420</td><td>25/06/2026</td><td><span class="stock-badge stock-low">Por vencer</span></td><td><button class="btn-secondary" style="height:28px;font-size:11px;padding:0 10px;" onclick="showToast('Detalle abierto')">Ver</button></td></tr>
+          <tr><td><strong>Amoxicilina 500mg</strong></td><td>Antibiótico</td><td>Caja 12 caps.</td><td style="color:#d97706;font-weight:700">22</td><td>$1.200</td><td>30/06/2026</td><td><span class="stock-badge stock-low">Por vencer</span></td><td><button class="btn-secondary" style="height:28px;font-size:11px;padding:0 10px;" onclick="showToast('Detalle abierto')">Ver</button></td></tr>
+          <tr><td><strong>Paracetamol 500mg</strong></td><td>Analgésico</td><td>Caja 16 comp.</td><td style="color:#00925e;font-weight:700">145</td><td>$380</td><td>10/03/2027</td><td><span class="stock-badge stock-ok">OK</span></td><td><button class="btn-secondary" style="height:28px;font-size:11px;padding:0 10px;" onclick="showToast('Detalle abierto')">Ver</button></td></tr>
+          <tr><td><strong>Omeprazol 20mg</strong></td><td>Gastrointestinal</td><td>Caja 14 caps.</td><td style="color:#00925e;font-weight:700">67</td><td>$920</td><td>05/09/2027</td><td><span class="stock-badge stock-ok">OK</span></td><td><button class="btn-secondary" style="height:28px;font-size:11px;padding:0 10px;" onclick="showToast('Detalle abierto')">Ver</button></td></tr>
+          <tr><td><strong>Losartán 50mg</strong></td><td>Cardiovascular</td><td>Caja 30 comp.</td><td style="color:#00925e;font-weight:700">89</td><td>$1.650</td><td>12/11/2027</td><td><span class="stock-badge stock-ok">OK</span></td><td><button class="btn-secondary" style="height:28px;font-size:11px;padding:0 10px;" onclick="showToast('Detalle abierto')">Ver</button></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ HISTORIAL VENTAS ═══════════════ -->
+  <div class="page" id="page-historial">
+    <h1 class="page-title">Historial de Ventas</h1>
+    <div class="hist-stats">
+      <div class="hist-stat"><div class="hist-stat-label">Ventas del mes</div><div class="hist-stat-val">$1.284.600</div><div class="hist-stat-sub">312 transacciones</div></div>
+      <div class="hist-stat"><div class="hist-stat-label">Ticket promedio</div><div class="hist-stat-val">$4.117</div><div class="hist-stat-sub">+12% vs mes ant.</div></div>
+      <div class="hist-stat"><div class="hist-stat-label">Top vendedor</div><div class="hist-stat-val" style="font-size:18px;font-weight:700">María C.</div><div class="hist-stat-sub">142 ventas</div></div>
+      <div class="hist-stat"><div class="hist-stat-label">Pendientes</div><div class="hist-stat-val" style="color:#d97706">8</div><div class="hist-stat-sub">Requieren seguimiento</div></div>
+    </div>
+    <div class="card">
+      <div class="inv-toolbar" style="margin-bottom:14px;">
+        <input class="search-input" type="search" placeholder="Buscar por factura, cliente..." aria-label="Buscar venta">
+        <select class="filter-select" aria-label="Filtrar por estado"><option>Todos</option><option>Completadas</option><option>Pendientes</option></select>
+        <select class="filter-select" aria-label="Filtrar por fecha"><option>Este mes</option><option>Última semana</option><option>Hoy</option></select>
+        <button class="btn-secondary" onclick="showToast('Exportando...')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar
+        </button>
+      </div>
+      <table>
+        <thead><tr><th>Nro Factura</th><th>Sucursal</th><th>Vendedor</th><th>Cliente</th><th>Monto</th><th>Estado</th><th>Fecha</th></tr></thead>
+        <tbody>
+          <tr><td><span class="factura-id">#01AD</span></td><td>Chacabuco</td><td>María Constanzo</td><td>Lionel Messi</td><td><span class="monto">$1.840</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>06/05/2026</td></tr>
+          <tr><td><span class="factura-id">#01AC</span></td><td>Chacabuco</td><td>María Constanzo</td><td>Carlos Tevez</td><td><span class="monto">$3.200</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>06/05/2026</td></tr>
+          <tr><td><span class="factura-id">#01AB</span></td><td>Chacabuco</td><td>Juan Pérez</td><td>Sergio Agüero</td><td><span class="monto">$970</span></td><td><span class="badge-sm badge-pen">Pendiente</span></td><td>06/05/2026</td></tr>
+          <tr><td><span class="factura-id">#01AA</span></td><td>Chacabuco</td><td>María Constanzo</td><td>Pablo Aimar</td><td><span class="monto">$5.600</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>06/05/2026</td></tr>
+          <tr><td><span class="factura-id">#019Z</span></td><td>Chacabuco</td><td>Laura Gómez</td><td>Lionel Messi</td><td><span class="monto">$2.150</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>05/05/2026</td></tr>
+          <tr><td><span class="factura-id">#019Y</span></td><td>Chacabuco</td><td>Juan Pérez</td><td>Diego Maradona</td><td><span class="monto">$4.300</span></td><td><span class="badge-sm badge-ok">Completada</span></td><td>05/05/2026</td></tr>
+          <tr><td><span class="factura-id">#019X</span></td><td>Chacabuco</td><td>María Constanzo</td><td>Javier Zanetti</td><td><span class="monto">$780</span></td><td><span class="badge-sm badge-pen">Pendiente</span></td><td>05/05/2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+<!-- ═══════════════ REGISTRAR VENTA ═══════════════ -->
+<div class="page" id="page-ventas">
+  <h1 class="page-title">Registrar Venta</h1>
+  <div class="venta-grid">
+    <div class="left-col">
+        <!-- Cliente -->
+  <div class="card">
+    <div class="card-title">
+      <span style="display:flex;align-items:center;gap:8px;">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+        Cliente
+      </span>
+    </div>
+    <div class="client-row">
+      <div><span class="label-sm">Tipo doc.</span><select class="form-select"><option>DNI</option><option>CUIL</option><option>Pasaporte</option></select></div>
+      <div><span class="label-sm">Número</span><input class="form-input" type="text" placeholder="Ej: 35.123.456"></div>
+    </div>
+    <span class="label-sm">Nombre (opcional)</span>
+    <input class="form-input" type="text" placeholder="Nombre del cliente" id="nombre-cliente">
+  </div>
+      <!-- Productos -->
+      <div class="card">
+        <div class="card-title">
+          <span style="display:flex;align-items:center;gap:8px;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+            Productos
+            <span class="pill" id="item-counter">0 ítems</span>
+          </span>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:12px;">
+          <div style="flex:1;position:relative;">
+            <input class="form-input" id="product-search" type="text" placeholder="Buscar producto..." style="padding-left:34px;" oninput="filterProducts(this.value)" aria-label="Buscar producto">
+            <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--text-muted);pointer-events:none;" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          </div>
+          <button class="btn-secondary" onclick="simularScan()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2H3a1 1 0 00-1 1v3"/><path d="M18 2h3a1 1 0 011 1v3"/><path d="M6 22H3a1 1 0 01-1-1v-3"/><path d="M18 22h3a1 1 0 001-1v-3"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Escanear
+          </button>
+        </div>
+        <!-- Dropdown sugerencias -->
+        <div id="product-suggestions" style="display:none;border:1px solid var(--border);border-radius:8px;margin-bottom:12px;overflow:hidden;background:var(--surface);">
+          <div style="padding:8px 12px;font-size:12px;color:var(--text-muted);background:var(--surface-2);border-bottom:1px solid var(--border);">Resultados</div>
+          <div id="suggestions-list"></div>
+        </div>
+        <table class="products-table">
+          <thead><tr><th style="width:35%">Producto</th><th>P.Unit</th><th>Cant.</th><th>Subtotal</th><th></th></tr></thead>
+          <tbody id="cart-tbody">
+            <tr id="cart-empty"><td colspan="5" style="text-align:center;padding:28px;color:var(--text-muted);font-size:12px;">
+              <svg style="display:block;margin:0 auto 8px;color:var(--border);" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 3H8l-2 4h12l-2-4z"/></svg>
+              Ningún producto agregado aún
+            </td></tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- Nota -->
+      <div class="card">
+        <div class="card-title">Nota interna</div>
+        <textarea class="form-input" id="nota-interna" style="height:70px;padding:10px;resize:none;" placeholder="Observaciones de la venta..."></textarea>
+      </div>
+    </div>
+<!-- PANEL DERECHO: Pago -->
+<div style="display:flex;flex-direction:column;gap:14px;">
+
+  <!-- Método de Pago -->
+  <div class="card">
+    <div class="card-title">Método de pago</div>
+    <div class="method-grid">
+      <div class="method-opt active" onclick="selectMethod(this)" data-method="Efectivo">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+        Efectivo
+      </div>
+      <div class="method-opt" onclick="selectMethod(this)" data-method="Tarjeta débito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        Tarjeta débito
+      </div>
+      <div class="method-opt" onclick="selectMethod(this)" data-method="Tarjeta crédito">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
+        Crédito
+      </div>
+      <div class="method-opt" onclick="selectMethod(this)" data-method="Obra social">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H10a2 2 0 00-2 2v16a2 2 0 002 2h4a2 2 0 002-2V4a2 2 0 00-2-2z"/><path d="M6 12h12M12 6v12"/></svg>
+        Obra social
+      </div>
+    </div>
+
+    <!-- Desplegable de Cuotas -->
+    <div id="cuotas-wrap" style="display:none; margin-top:14px;">
+      <span class="label-sm">Cuotas</span>
+      <select id="cuotas" class="form-select" onchange="renderCart()">
+        <option>1 cuota (sin interés)</option>
+        <option>3 cuotas</option>
+        <option>6 cuotas</option>
+        <option>12 cuotas</option>
+      </select>
+    </div>
+
+    <!-- Desplegable de Obra Social -->
+    <div id="obra-wrap" style="display:none; margin-top:14px;">
+      <span class="label-sm">Seleccionar Obra Social</span>
+      <select class="form-select" style="margin-bottom: 10px;">
+        <option>OSDE</option>
+        <option>Swiss Medical</option>
+        <option>PAMI</option>
+        <option>IOMA</option>
+        <option>Galeno</option>
+      </select>
+      <span class="label-sm">N° de afiliado</span>
+      <input type="text" class="form-input" placeholder="Número de afiliado" />
+    </div>
+  </div>
+
+  <!-- Resumen de Venta -->
+  <div class="card">
+    <div class="card-title">Resumen de venta</div>
+    
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;">
+      <span class="label-sm" style="margin: 0;">Descuento</span>
+      <div style="display: flex; align-items: center; gap: 4px;">
+        <input type="number" id="descuento" class="form-input" value="0" min="0" max="100" style="width:70px; height: 28px; padding: 0 6px;" oninput="renderCart()" />
+        <span style="font-size:12px; font-weight: 600; color: var(--text-sec);">%</span>
+      </div>
+    </div>
+
+    <div class="mini-summary">
+      <div class="mini-row"><span>Subtotal</span><span id="subtotal-val">$0,00</span></div>
+      <div class="mini-row"><span>Descuento</span><span id="descuento-val" style="color:#dc2626;">— $0,00</span></div>
+      <div class="mini-row"><span>IVA (21%)</span><span id="iva-val">$0,00</span></div>
+      <div class="mini-total">
+        <span class="mini-total-label">Total</span>
+        <span class="mini-total-amount" id="total-val">$0,00</span>
+      </div>
+
+      <div id="resumen-credito-info" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); text-align: right;">
+        <div class="mini-row" style="font-weight: 600;"><span id="resumen-cuotas-detalle">1 cuota de</span><span id="resumen-cuotas-valor">$0,00</span></div>
+        <div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-top: 4px; display: flex; align-items: center; justify-content: flex-end; gap: 4px;">
+          💳 ¡Apoye la tarjeta sobre el posnet!
+        </div>
+      </div>
+
+    </div>
+
+    <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:8px;" onclick="openConfirmModal()">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+      Ver resumen y confirmar
+    </button>
+    <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="resetCart()">Cancelar venta</button>
+  </div>
+</div>
+</div>
+</div>
+  <!-- ═══════════════ PROVEEDORES ═══════════════ -->
+  <div class="page" id="page-proveedores">
+    <h1 class="page-title">Proveedores</h1>
+    <div class="card">
+      <div class="inv-toolbar" style="margin-bottom:14px;">
+        <input class="search-input" type="search" placeholder="Buscar proveedor..." aria-label="Buscar proveedor">
+        <button class="btn-primary" onclick="showToast('Proveedor agregado')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nuevo proveedor
+        </button>
+      </div>
+      <table>
+        <thead><tr><th>Nombre</th><th>CUIT</th><th>Contacto</th><th>Teléfono</th><th>Último pedido</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Droguería del Centro</strong></td><td>30-71234567-0</td><td>Javier López</td><td>0800-555-1234</td><td>10/05/2026</td><td><span class="badge-sm badge-ok">Activo</span></td></tr>
+          <tr><td><strong>Farmacéutica Norte SA</strong></td><td>30-68901234-5</td><td>Ana García</td><td>351-456-7890</td><td>28/04/2026</td><td><span class="badge-sm badge-ok">Activo</span></td></tr>
+          <tr><td><strong>Distribuidora Salud</strong></td><td>30-54321098-7</td><td>Pablo Ruiz</td><td>011-4567-8901</td><td>15/03/2026</td><td><span class="badge-sm badge-pen">Inactivo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ USUARIOS ═══════════════ -->
+  <div class="page" id="page-usuarios">
+    <h1 class="page-title">Usuarios</h1>
+    <div class="card">
+      <div class="inv-toolbar" style="margin-bottom:14px;">
+        <input class="search-input" type="search" placeholder="Buscar usuario..." aria-label="Buscar usuario">
+        <button class="btn-primary" onclick="showToast('Usuario creado')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Nuevo usuario
+        </button>
+      </div>
+      <table>
+        <thead><tr><th>Nombre</th><th>Email</th><th>Rol</th><th>Sucursal</th><th>Últ. acceso</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Mario Bros</strong> <span style="font-size:10px;color:var(--primary);font-weight:700">(tú)</span></td><td>mario@bienestar.com</td><td>Administrador</td><td>Chacabuco</td><td>Ahora</td><td><span class="badge-sm badge-ok">Activo</span></td></tr>
+          <tr><td><strong>María Constanzo</strong></td><td>maria@bienestar.com</td><td>Farmacéutica</td><td>Chacabuco</td><td>Hoy 21:00</td><td><span class="badge-sm badge-ok">Activo</span></td></tr>
+          <tr><td><strong>Juan Pérez</strong></td><td>juan@bienestar.com</td><td>Vendedor</td><td>Chacabuco</td><td>Hoy 13:00</td><td><span class="badge-sm badge-ok">Activo</span></td></tr>
+          <tr><td><strong>Laura Gómez</strong></td><td>laura@bienestar.com</td><td>Vendedora</td><td>Chacabuco</td><td>Ayer 18:00</td><td><span class="badge-sm badge-ok">Activo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════ REPORTES ═══════════════ -->
+  <div class="page" id="page-reportes">
+    <h1 class="page-title">Reportes</h1>
+    <div class="hist-stats">
+      <div class="hist-stat"><div class="hist-stat-label">Ventas mes</div><div class="hist-stat-val">$1.284.600</div><div class="hist-stat-sub">+14% vs mes ant.</div></div>
+      <div class="hist-stat"><div class="hist-stat-label">Unidades</div><div class="hist-stat-val">3.847</div><div class="hist-stat-sub">312 transacciones</div></div>
+      <div class="hist-stat"><div class="hist-stat-label">Ganancia neta</div><div class="hist-stat-val">$389.200</div><div class="hist-stat-sub">Margen: 30,3%</div></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Ventas por día — Junio 2026</div>
+      <div class="chart-area" style="height:160px;">
+        <div class="bar-wrap"><div class="bar" style="height:45px"></div><span class="bar-label">1</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:60px"></div><span class="bar-label">2</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:52px"></div><span class="bar-label">3</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:80px"></div><span class="bar-label">4</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:70px"></div><span class="bar-label">5</span></div>
+        <div class="bar-wrap"><div class="bar highlight" style="height:95px"></div><span class="bar-label">6</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:65px"></div><span class="bar-label">7</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:55px"></div><span class="bar-label">8</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:73px"></div><span class="bar-label">9</span></div>
+        <div class="bar-wrap"><div class="bar" style="height:88px"></div><span class="bar-label">10</span></div>
+      </div>
+      <div class="chart-legend"><span><span class="legend-dot" style="background:var(--secondary)"></span>Ventas</span><span><span class="legend-dot" style="background:var(--primary)"></span>Día pico</span><span style="margin-left:auto;color:var(--text-sec);font-weight:600;">Total: $1.284.600</span></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ CONFIGURACIÓN ═══════════════ -->
+  <div class="page" id="page-configuracion">
+    <h1 class="page-title">Configuración</h1>
+
+    <div class="settings-layout">
+      <!-- Nav lateral settings -->
+      <div class="settings-nav-list">
+        <div class="settings-nav-item active" onclick="showSettingsPanel('apariencia', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          Apariencia
+        </div>
+        <div class="settings-nav-item" onclick="showSettingsPanel('idioma', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22c5.52 0 10-4.48 10-10S17.52 2 12 2 2 6.48 2 12s4.48 10 10 10z"/><path d="M2 12h20"/><path d="M12 2c-3 4-3 14 0 20M12 2c3 4 3 14 0 20"/></svg>
+          Idioma y región
+        </div>
+        <div class="settings-nav-item" onclick="showSettingsPanel('accesibilidad', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="4" r="2"/><path d="M19 13c-1-5-3-7-7-7s-6 2-7 7"/><path d="M10 21v-6h4v6"/><path d="M8 21h8"/></svg>
+          Accesibilidad
+        </div>
+        <div class="settings-nav-item" onclick="showSettingsPanel('atajos', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M6 8h.01M10 8h.01M14 8h.01M18 8h.01M8 12h.01M12 12h.01M16 12h.01M7 16h10"/></svg>
+          Atajos de teclado
+        </div>
+        <div class="settings-nav-item" onclick="showSettingsPanel('menu', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+          Orden del menú
+        </div>
+        <div class="settings-nav-item" onclick="showSettingsPanel('notificaciones', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+          Notificaciones
+        </div>
+        <div class="settings-nav-item" onclick="showSettingsPanel('cuenta', this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+          Cuenta
+        </div>
+      </div>
+
+      <!-- Panels -->
+      <div>
+
+        <!-- APARIENCIA -->
+        <div class="settings-panel active" id="panel-apariencia">
+          <div class="settings-section">
+            <div class="settings-section-title">Tema de color</div>
+            <div class="theme-grid">
+              <div class="theme-swatch active" onclick="setTheme('', this)" title="Teal clásico">
+                <div class="theme-swatch-color" style="background:linear-gradient(135deg,#007A8E,#009B9F)"></div>
+                <div class="theme-swatch-label">Clásico</div>
+              </div>
+              <div class="theme-swatch" onclick="setTheme('blue', this)" title="Azul acero">
+                <div class="theme-swatch-color" style="background:linear-gradient(135deg,#1a2e3e,#5191C1)"></div>
+                <div class="theme-swatch-label">Azul</div>
+              </div>
+              <div class="theme-swatch" onclick="setTheme('dark', this)" title="Oscuro">
+                <div class="theme-swatch-color" style="background:linear-gradient(135deg,#0F172A,#1E293B)"></div>
+                <div class="theme-swatch-label">Oscuro</div>
+              </div>
+              <div class="theme-swatch" onclick="setTheme('midnight', this)" title="Medianoche">
+                <div class="theme-swatch-color" style="background:linear-gradient(135deg,#000,#1a1a1a)"></div>
+                <div class="theme-swatch-label">Medianoche</div>
+              </div>
+              <div class="theme-swatch" onclick="setTheme('light-clean', this)" title="Claro limpio">
+                <div class="theme-swatch-color" style="background:linear-gradient(135deg,#f0f4f8,#fff)"></div>
+                <div class="theme-swatch-label">Claro</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title" id="font-preview">Tamaño de fuente</div>
+            <div class="setting-row" style="border-bottom:none;padding:0;">
+              <div class="setting-label">
+                <div class="setting-label-title">Tamaño del texto</div>
+                <div class="setting-label-desc">Afecta todo el contenido de la aplicación</div>
+              </div>
+              <div class="font-size-ctrl">
+                <button class="font-size-btn" onclick="changeFontSize(-1)" aria-label="Reducir tamaño de fuente" title="Ctrl+-">A−</button>
+                <span class="font-size-val" id="font-size-display">14px</span>
+                <button class="font-size-btn" onclick="changeFontSize(1)" aria-label="Aumentar tamaño de fuente" title="Ctrl++">A+</button>
+              </div>
+            </div>
+            <!-- Preview box -->
+            <div id="font-preview-box" style="margin-top:16px;padding:14px 16px;background:var(--surface-2);border-radius:9px;border:1px dashed var(--border);transition:font-size .2s;">
+              <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--text-muted);margin-bottom:8px;">Vista previa del texto</div>
+              <div id="preview-heading" style="font-weight:700;color:var(--text-main);line-height:1.3;">BieneStar — Sistema de Gestión</div>
+              <div id="preview-body" style="color:var(--text-sec);margin-top:4px;line-height:1.5;">Ibuprofeno 400mg · Stock: 5 unidades · Vence: 12/2026</div>
+              <div id="preview-small" style="color:var(--text-muted);margin-top:4px;line-height:1.4;">Última venta hace 2 horas — Factura #01AD — $1.840</div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <div class="settings-section-title">Barra lateral</div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Menú contraído por defecto</div>
+                <div class="setting-label-desc">Inicia con la barra lateral colapsada</div>
+              </div>
+              <label class="toggle" aria-label="Menú contraído por defecto">
+                <input type="checkbox" id="toggle-collapsed">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Mostrar etiquetas del menú</div>
+                <div class="setting-label-desc">Texto junto a los íconos del menú</div>
+              </div>
+              <label class="toggle" aria-label="Mostrar etiquetas">
+                <input type="checkbox" checked id="toggle-labels">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <button class="settings-save-btn" onclick="saveAppearance()">Guardar cambios</button>
+        </div>
+
+        <!-- IDIOMA -->
+        <div class="settings-panel" id="panel-idioma">
+          <div class="settings-section">
+            <div class="settings-section-title">Idioma de la interfaz</div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Idioma</div>
+                <div class="setting-label-desc">Idioma de menús, etiquetas y mensajes del sistema</div>
+              </div>
+              <select class="lang-select" id="lang-select" aria-label="Seleccionar idioma" onchange="previewLanguage(this.value)">
+                <option value="es">🇦🇷 Español (Argentina)</option>
+                <option value="es-es">🇪🇸 Español (España)</option>
+                <option value="en">🇺🇸 English</option>
+                <option value="pt">🇧🇷 Português</option>
+                <option value="de">🇩🇪 Deutsch</option>
+                <option value="ru">🇷🇺 Русский</option>
+                <option value="zh">🇨🇳 中文</option>
+                <option value="ar">🇸🇦 العربية</option>
+                <option value="he">🇮🇱 עברית</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Formato de fecha</div>
+                <div class="setting-label-desc">Cómo se muestran las fechas</div>
+              </div>
+              <select class="lang-select" aria-label="Formato de fecha">
+                <option>DD/MM/AAAA</option>
+                <option>MM/DD/AAAA</option>
+                <option>AAAA-MM-DD</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Moneda</div>
+                <div class="setting-label-desc">Moneda predeterminada para precios</div>
+              </div>
+              <select class="lang-select" aria-label="Moneda">
+                <option>ARS — Peso argentino</option>
+                <option>USD — Dólar</option>
+                <option>EUR — Euro</option>
+                <option>BRL — Real brasileño</option>
+              </select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Zona horaria</div>
+              </div>
+              <select class="lang-select" aria-label="Zona horaria">
+                <option>America/Argentina/Buenos_Aires (UTC-3)</option>
+                <option>America/Sao_Paulo (UTC-3)</option>
+                <option>America/Santiago (UTC-4)</option>
+                <option>Europe/Madrid (UTC+2)</option>
+              </select>
+            </div>
+          </div>
+          <div id="lang-rtl-notice" style="display:none;margin-top:12px;padding:10px 14px;background:rgba(0,122,142,.1);border-radius:8px;font-size:12px;color:var(--primary);border:1px solid rgba(0,122,142,.25);">
+            ⚠️ <span id="lang-rtl-text"></span>
+          </div>
+          <button class="settings-save-btn" onclick="applyLanguage()">Guardar cambios</button>
+        </div>
+
+        <!-- ACCESIBILIDAD -->
+        <div class="settings-panel" id="panel-accesibilidad">
+          <div class="settings-section">
+            <div class="settings-section-title">Accesibilidad visual</div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Alto contraste</div>
+                <div class="setting-label-desc">Aumenta el contraste de textos y bordes</div>
+              </div>
+              <label class="toggle" aria-label="Alto contraste">
+                <input type="checkbox" id="toggle-contrast" onchange="toggleHighContrast(this)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Reducir movimiento</div>
+                <div class="setting-label-desc">Desactiva animaciones y transiciones</div>
+              </div>
+              <label class="toggle" aria-label="Reducir movimiento">
+                <input type="checkbox" id="toggle-motion" onchange="toggleReducedMotion(this)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Cursor grande</div>
+                <div class="setting-label-desc">Usa un cursor más visible</div>
+              </div>
+              <label class="toggle" aria-label="Cursor grande">
+                <input type="checkbox" id="toggle-cursor" onchange="toggleLargeCursor(this)">
+                <span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Modo daltónico</div>
+                <div class="setting-label-desc">Ajusta colores para daltonismo</div>
+              </div>
+              <select class="lang-select" aria-label="Modo daltónico">
+                <option>Ninguno</option>
+                <option>Protanopía (rojo)</option>
+                <option>Deuteranopía (verde)</option>
+                <option>Tritanopía (azul)</option>
+              </select>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Accesibilidad auditiva y cognitiva</div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Lector de pantalla optimizado</div>
+                <div class="setting-label-desc">Mejora la compatibilidad con NVDA, JAWS, VoiceOver</div>
+              </div>
+              <label class="toggle" aria-label="Lector de pantalla">
+                <input type="checkbox"><span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Confirmar antes de eliminar</div>
+                <div class="setting-label-desc">Solicita confirmación en acciones destructivas</div>
+              </div>
+              <label class="toggle" aria-label="Confirmar antes de eliminar">
+                <input type="checkbox" checked><span class="toggle-slider"></span>
+              </label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label">
+                <div class="setting-label-title">Subrayar enlaces</div>
+                <div class="setting-label-desc">Hace los vínculos más distinguibles</div>
+              </div>
+              <label class="toggle" aria-label="Subrayar enlaces">
+                <input type="checkbox"><span class="toggle-slider"></span>
+              </label>
+            </div>
+          </div>
+          <button class="settings-save-btn" onclick="showToast('Ajustes de accesibilidad guardados')">Guardar cambios</button>
+        </div>
+
+        <!-- ATAJOS -->
+        <div class="settings-panel" id="panel-atajos">
+          <div class="settings-section">
+            <div class="settings-section-title">Atajos de teclado</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Hacé clic en un atajo para cambiarlo. También podés agregar nuevos.</div>
+            <div id="shortcuts-list" style="display:grid;gap:2px;"></div>
+            <div style="margin-top:14px;padding:12px;background:var(--surface-2);border-radius:8px;font-size:12px;color:var(--text-muted);">
+              💡 Hacé clic en <strong>Editar</strong> en cualquier atajo, luego presioná la tecla deseada (ej: <span class="kbd" style="font-size:10px;">F2</span> o <span class="kbd" style="font-size:10px;">Alt+S</span>).
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Agregar nuevo atajo</div>
+            <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;">
+              <input class="shortcut-edit" id="new-shortcut-label" placeholder="Nombre (ej: Reportes)" style="width:160px;">
+              <input class="shortcut-edit" id="new-shortcut-key" placeholder="Presioná teclas…" readonly style="width:150px;cursor:pointer;" onclick="captureNewShortcut(this)">
+              <select class="lang-select" id="new-shortcut-action">
+                <option value="dashboard">Ir a Inicio</option>
+                <option value="ventas">Registrar Venta</option>
+                <option value="inventario">Ir a Inventario</option>
+                <option value="historial">Historial</option>
+                <option value="configuracion">Configuración</option>
+                <option value="reportes">Reportes</option>
+                <option value="usuarios">Usuarios</option>
+                <option value="proveedores">Proveedores</option>
+                <option value="toggleSidebar">Contraer/expandir menú</option>
+              </select>
+              <button class="settings-save-btn" style="height:36px;padding:0 16px;font-size:13px;" onclick="addShortcut()">+ Agregar</button>
+            </div>
+          </div>
+          <button class="settings-save-btn" onclick="saveShortcuts()">Guardar atajos</button>
+        </div>
+
+        <!-- MENÚ -->
+        <div class="settings-panel" id="panel-menu">
+          <div class="settings-section">
+            <div class="settings-section-title">Orden del menú</div>
+            <div style="font-size:12px;color:var(--text-muted);margin-bottom:14px;">Arrastrá los ítems para reordenar el menú lateral.</div>
+            <div class="menu-order-list" id="menu-order-list">
+              <div class="menu-order-item" draggable="true" data-id="dashboard">
+                <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>
+                <span class="menu-order-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg></span>
+                <span class="menu-order-name">Inicio</span>
+              </div>
+              <div class="menu-order-item" draggable="true" data-id="ventas">
+                <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>
+                <span class="menu-order-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/></svg></span>
+                <span class="menu-order-name">Registrar Venta</span>
+              </div>
+              <div class="menu-order-item" draggable="true" data-id="inventario">
+                <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>
+                <span class="menu-order-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></span>
+                <span class="menu-order-name">Medicamentos</span>
+              </div>
+              <div class="menu-order-item" draggable="true" data-id="historial">
+                <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>
+                <span class="menu-order-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg></span>
+                <span class="menu-order-name">Historial de Ventas</span>
+              </div>
+              <div class="menu-order-item" draggable="true" data-id="proveedores">
+                <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>
+                <span class="menu-order-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/></svg></span>
+                <span class="menu-order-name">Proveedores</span>
+              </div>
+              <div class="menu-order-item" draggable="true" data-id="usuarios">
+                <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>
+                <span class="menu-order-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/></svg></span>
+                <span class="menu-order-name">Usuarios</span>
+              </div>
+            </div>
+          </div>
+          <button class="settings-save-btn" onclick="showToast('Orden del menú guardado')">Guardar orden</button>
+        </div>
+
+        <!-- NOTIFICACIONES -->
+        <div class="settings-panel" id="panel-notificaciones">
+          <div class="settings-section">
+            <div class="settings-section-title">Notificaciones</div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Alertas de stock crítico</div><div class="setting-label-desc">Notificar cuando un medicamento esté bajo</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Medicamentos por vencer</div><div class="setting-label-desc">Avisar con anticipación al vencimiento</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Anticipación de vencimiento</div></div>
+              <select class="lang-select"  ><option>30 días</option><option>15 días</option><option>7 días</option></select>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Resumen diario por email</div></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Sonido de notificaciones</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+          <button class="settings-save-btn" onclick="showToast('Notificaciones guardadas')">Guardar cambios</button>
+        </div>
+
+        <!-- CUENTA -->
+        <div class="settings-panel" id="panel-cuenta">
+          <div class="settings-section">
+            <div class="settings-section-title">Datos de la cuenta</div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Nombre completo</div></div>
+              <input class="form-input" style="width:220px;" value="Mario Bros">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Email</div></div>
+              <input class="form-input" style="width:220px;" value="mario@bienestar.com">
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Rol</div></div>
+              <span style="font-size:13px;font-weight:600;color:var(--primary);">Administrador</span>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Sucursal</div></div>
+              <select class="lang-select"><option>Chacabuco</option></select>
+            </div>
+          </div>
+          <div class="settings-section">
+            <div class="settings-section-title">Seguridad</div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Cambiar contraseña</div></div>
+              <button class="btn-secondary" onclick="showToast('Correo de cambio enviado')">Cambiar</button>
+            </div>
+            <div class="setting-row">
+              <div class="setting-label"><div class="setting-label-title">Doble factor de autenticación</div><div class="setting-label-desc">Mayor seguridad para tu cuenta</div></div>
+              <label class="toggle"><input type="checkbox"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+          <button class="settings-save-btn" onclick="showToast('Datos de cuenta guardados')">Guardar cambios</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════ PÁGINAS PLACEHOLDER ═══════════════ -->
+  <!-- (no extra pages needed) -->
+
+</div><!-- /main-wrap -->
+
+<!-- MODAL CONFIRMAR VENTA -->
+<div class="modal-overlay" id="confirm-modal">
+  <div class="modal-box">
+    <div class="modal-header-bar">
+      <span class="modal-header-title">Confirmar venta</span>
+      <button class="modal-close-btn" onclick="closeModal()" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body-wrap">
+      <div style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--primary);letter-spacing:.5px;margin-bottom:8px;">Resumen</div>
+      <div class="modal-info-row"><span class="modal-info-label">Fecha</span><span id="modal-fecha">—</span></div>
+      <div class="modal-info-row"><span class="modal-info-label">Vendedor</span><span id="modal-vendedor">Mario Bros</span></div>
+      <div class="modal-info-row"><span class="modal-info-label">Cliente</span><span id="nombrecliente">— Consumidor final</span></div>
+      <div class="modal-info-row"><span class="modal-info-label">Método de pago</span><span id="modal-method">Efectivo</span></div>
+      <div class="modal-info-row"><span class="modal-info-label">Sucursal</span><span>Chacabuco</span></div>
+
+      <div class="modal-info-row" style="flex-direction: column; align-items: flex-start; gap: 4px;">
+        <span class="modal-info-label">Nota interna</span>
+        <span id="notainterna" style="font-style: italic; color: var(--text-sec); font-size: 12.5px; word-break: break-word;"></span>
+      </div>
+
+      <div class="modal-total-area">
+        <div class="modal-total-row"><span>Subtotal</span><span id="modal-subtotal">$0,00</span></div>
+        <div class="modal-total-row"><span>IVA (21%)</span><span id="modal-iva">$0,00</span></div>
+        <div class="modal-grand">
+          <span class="modal-grand-label">Total a cobrar</span>
+          <span class="modal-grand-amount" id="modal-total">$0,00</span>
+        </div>
+
+        <!-- IDs únicos exclusivos para el modal -->
+        <div id="modal-credito-info" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); text-align: right;">
+          <div class="modal-total-row" style="font-weight: 600;"><span id="modal-cuotas-detalle">1 cuota de</span><span id="modal-cuotas-valor">$0,00</span></div>
+        </div>
+
+      </div>
+    </div>
+    <div class="modal-footer-wrap" style="display: flex; gap: 8px;">
+      <button class="modal-cancel-btn" onclick="closeModal()">Cancelar</button>
+      <button class="btn-secondary" onclick="window.print()" style="height: 38px; font-size: 13px;" title="Imprimir Comprobante">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2"/><path d="M6 14h12v8H6z"/></svg>
+        Imprimir
+      </button>
+      <button class="modal-confirm-btn" onclick="confirmSale()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        Confirmar venta
+      </button>
+    </div>
+  </div>
+</div>
+<!-- TOAST -->
+<div class="toast" id="toast-msg" data-type="success">
+  <svg id="toast-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  <span id="toast-text">Acción realizada</span>
+</div>
+
+<!-- KEYBOARD HINT -->
+<div class="kb-hint" id="kb-hint"></div>
+<script defer src="js/main.js"></script>
+
+
+</body>
+</html>
