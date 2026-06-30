@@ -1,0 +1,169 @@
+/* ══════════════════════════════════════
+   RESPONSIVE — BieneStar
+   Mobile-first breakpoints:
+   - Mobile: < 640px
+   - Tablet: 640px – 1024px
+   - Desktop: > 1024px
+══════════════════════════════════════ */
+
+/* ── Tablet (≤ 1024px) ── */
+@media (max-width: 1024px) {
+
+  /* Dashboard grid: 2 columnas */
+  .dashboard-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto auto auto;
+  }
+
+  .chart-card  { grid-column: 1 / 3; grid-row: 1; }
+  .kpi-card    { grid-column: 1 / 3; grid-row: 2; }
+  .activity-card { grid-column: 1;   grid-row: 3; }
+  .sales-card  { grid-column: 2;     grid-row: 3; }
+
+  /* Venta: stack vertical */
+  .venta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stats row */
+  .stats-row { flex-wrap: wrap; }
+  .stats-row .stat-card { flex: 1 1 calc(50% - 7px); }
+
+  /* Historial stats */
+  .hist-stats { flex-wrap: wrap; }
+  .hist-stat { flex: 1 1 calc(50% - 7px); }
+
+  /* Settings layout */
+  .settings-layout {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+  .settings-nav-list { display: flex; overflow-x: auto; border-radius: var(--radius); }
+  .settings-nav-item { border-left: none !important; border-bottom: 3px solid transparent; flex-shrink: 0; padding: 10px 14px; }
+  .settings-nav-item.active { border-bottom-color: var(--primary); border-left: none !important; background: rgba(0,122,142,.08); }
+}
+
+/* ── Mobile (≤ 640px) ── */
+@media (max-width: 640px) {
+
+  /* Sidebar: se oculta y se convierte en drawer */
+  :root { --sidebar-w: 260px; }
+
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 100vh;
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform .3s cubic-bezier(.4,0,.2,1), width .3s;
+    box-shadow: 4px 0 20px rgba(0,0,0,.3);
+  }
+
+  .sidebar.mobile-open {
+    transform: translateX(0);
+  }
+
+  /* Overlay para cerrar sidebar en mobile */
+  .sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.45);
+    z-index: 299;
+  }
+  .sidebar-overlay.show { display: block; }
+
+  /* Main area ocupa todo */
+  .main-wrap { width: 100%; }
+
+  /* Topstrip: más compacto */
+  .topstrip { padding: 0 12px; height: 44px; }
+  .tab { padding: 0 10px; font-size: 12px; }
+  .tab-text { display: none; } /* Solo íconos en mobile */
+  .topstrip-date { font-size: 11px; }
+
+  /* Botón hamburger siempre visible en topstrip en mobile */
+  .mobile-menu-btn {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border: none;
+    background: rgba(0,0,0,.06);
+    border-radius: 8px;
+    cursor: pointer;
+    color: var(--text-sec);
+    flex-shrink: 0;
+    margin-right: 8px;
+  }
+  .mobile-menu-btn svg { width: 20px; height: 20px; }
+
+  /* Page padding reducido */
+  .page { padding: 14px 14px; gap: 12px; }
+
+  /* Page title */
+  .page-title { font-size: 18px; }
+
+  /* Card padding reducido */
+  .card { padding: 14px 14px; }
+
+  /* Dashboard grid: 1 columna */
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: unset;
+  }
+  .chart-card   { grid-column: 1; grid-row: unset; }
+  .kpi-card     { grid-column: 1; grid-row: unset; }
+  .activity-card{ grid-column: 1; grid-row: unset; }
+  .sales-card   { grid-column: 1; grid-row: unset; }
+
+  /* Stats: 1 columna */
+  .stats-row { flex-direction: column; }
+  .stats-row .stat-card { flex: 1 1 100%; }
+
+  /* Historial: 1 columna */
+  .hist-stats { flex-direction: column; }
+  .hist-stat  { flex: 1 1 100%; }
+
+  /* Tabla responsiva: scroll horizontal */
+  .card { overflow-x: auto; }
+  table { min-width: 600px; }
+
+  /* Inventario toolbar wrap */
+  .inv-toolbar { flex-wrap: wrap; }
+  .search-input { min-width: 100%; }
+
+  /* Ventas: grid 1 col */
+  .venta-grid { grid-template-columns: 1fr; }
+  .client-row { flex-direction: column; gap: 8px; }
+
+  /* KPI card value */
+  .kpi-value { font-size: 36px; }
+
+  /* Settings nav: scroll horizontal */
+  .settings-layout { grid-template-columns: 1fr; }
+  .settings-nav-list { display: flex; overflow-x: auto; padding: 0; }
+  .settings-nav-item { flex-shrink: 0; font-size: 12px; padding: 10px 12px; }
+
+  /* Method grid ventas */
+  .method-grid { grid-template-columns: 1fr 1fr; }
+}
+
+/* ── Mobile pequeño (≤ 380px) ── */
+@media (max-width: 380px) {
+  .page { padding: 10px 10px; }
+  .card { padding: 12px 12px; }
+  .page-title { font-size: 16px; }
+  .stat-card-value { font-size: 24px; }
+  .kpi-value { font-size: 30px; }
+  .tab { padding: 0 8px; }
+}
+
+/* ── Botón mobile-menu: solo visible en mobile ── */
+.mobile-menu-btn { display: none; }
+
+/* ── Overlay: solo visible en mobile ── */
+.sidebar-overlay { display: none; }
+@media (max-width: 640px) {
+  .sidebar-overlay.show { display: block; }
+}
