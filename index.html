@@ -14,9 +14,170 @@
     <link rel="stylesheet" href="css/ventas.css">
     <link rel="stylesheet" href="css/historial.css">
     <link rel="stylesheet" href="css/configuracion.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/login.css">
 
 </head>
 <body>
+
+  <!-- ══════════════════════════════════════
+     PANTALLA DE LOGIN
+══════════════════════════════════════ -->
+<div id="login-screen" class="login-page-overlay">
+  <div class="login-card" role="main">
+
+    <div class="login-header">
+      <div class="login-logo">
+        <img src="image.png" alt="Logo BieneStar">
+        <span class="login-brand">Biene<span>Star</span></span>
+      </div>
+      <p class="login-tagline">Tu farmacia de confianza</p>
+    </div>
+
+    <div class="login-body">
+
+      <div class="login-main" id="login-main">
+        <h1 class="login-title">Bienvenido</h1>
+        <p class="login-subtitle">Ingresá con tu usuario y contraseña</p>
+
+        <div class="login-alert error" id="login-alert" role="alert" aria-live="polite">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p id="login-alert-text"></p>
+        </div>
+
+        <form id="login-form" novalidate>
+
+          <div class="login-field" id="field-user">
+            <div class="login-field-label">
+              <span class="login-field-label-text">Usuario</span>
+            </div>
+            <div class="login-input-wrap">
+              <span class="login-input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+              </span>
+              <input type="text" id="input-user" class="login-input"
+                placeholder="Nombre de usuario"
+                autocomplete="username" autocapitalize="none" spellcheck="false">
+            </div>
+            <div class="login-field-error" id="error-user" role="alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span id="error-user-text">Ingresá tu nombre de usuario</span>
+            </div>
+          </div>
+
+          <div class="login-field" id="field-pass">
+            <div class="login-field-label">
+              <span class="login-field-label-text">Contraseña</span>
+              <button type="button" class="login-forgot-link" onclick="loginShowRecovery()">
+                ¿Olvidaste la contraseña?
+              </button>
+            </div>
+            <div class="login-input-wrap">
+              <span class="login-input-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2"/>
+                  <path d="M7 11V7a5 5 0 0110 0v4"/>
+                </svg>
+              </span>
+              <input type="password" id="input-pass" class="login-input"
+                placeholder="••••••••" autocomplete="current-password">
+              <button type="button" class="login-pass-toggle" onclick="loginTogglePass()" aria-label="Mostrar contraseña">
+                <svg id="login-eye-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+              </button>
+            </div>
+            <div class="login-field-error" id="error-pass" role="alert">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/>
+                <line x1="12" y1="8" x2="12" y2="12"/>
+                <line x1="12" y1="16" x2="12.01" y2="16"/>
+              </svg>
+              <span id="error-pass-text">Ingresá tu contraseña</span>
+            </div>
+          </div>
+
+          <div class="login-remember">
+            <input type="checkbox" id="login-remember" name="remember">
+            <label for="login-remember">Mantener la sesión iniciada</label>
+          </div>
+
+          <button type="submit" class="login-btn" id="login-submit-btn">
+            <svg class="login-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+              <path d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4"/>
+              <polyline points="10 17 15 12 10 7"/>
+              <line x1="15" y1="12" x2="3" y2="12"/>
+            </svg>
+            <span class="login-btn-text">Iniciar Sesión</span>
+            <div class="login-spinner"></div>
+          </button>
+
+        </form>
+      </div><!-- /login-main -->
+
+      <div class="login-recovery" id="login-recovery">
+        <button class="login-back-btn" onclick="loginShowMain()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <polyline points="15 18 9 12 15 6"/>
+          </svg>
+          Volver al inicio de sesión
+        </button>
+        <h2 class="login-title">Recuperar contraseña</h2>
+        <p class="login-subtitle" style="margin-bottom:20px;">
+          Ingresá tu correo y nos contactaremos para restablecer el acceso.
+        </p>
+        <div class="login-alert info show" style="margin-bottom:20px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
+          <p><strong>¿Necesitás ayuda?</strong>Escribí a <strong>soporte@bienestar.com.ar</strong> o llamá al administrador.</p>
+        </div>
+        <div class="login-field">
+          <div class="login-field-label">
+            <span class="login-field-label-text">Tu correo electrónico</span>
+          </div>
+          <div class="login-input-wrap">
+            <span class="login-input-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+                <polyline points="22,6 12,13 2,6"/>
+              </svg>
+            </span>
+            <input type="email" id="recovery-email" class="login-input" placeholder="tucorreo@ejemplo.com">
+          </div>
+        </div>
+        <button type="button" class="login-btn" id="recovery-submit-btn" onclick="loginSendRecovery()" style="margin-top:4px;">
+          <svg class="login-btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+            <line x1="22" y1="2" x2="11" y2="13"/>
+            <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+          </svg>
+          <span class="login-btn-text">Solicitar recuperación</span>
+          <div class="login-spinner"></div>
+        </button>
+      </div><!-- /login-recovery -->
+
+    </div><!-- /login-body -->
+
+    <div class="login-footer">
+      BieneStar &copy; 2026 · Farmacia Chacabuco · v2.4.1
+    </div>
+
+  </div><!-- /login-card -->
+</div><!-- /login-screen -->
 
 <!-- SIDEBAR -->
 <aside class="sidebar" id="sidebar" aria-label="Navegación principal">
@@ -47,7 +208,7 @@
     <div class="nav-section-label">Inventario</div>
     <div class="nav-item" data-page="inventario" onclick="goTo('inventario')" role="button" tabindex="0" aria-label="Medicamentos">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12h6M12 9v6"/></svg>
-      <span class="nav-label">Medicamentos</span>
+      <span class="nav-label">Inventario</span>
       <span class="nav-badge">3</span>
     </div>
     <div class="nav-item" data-page="proveedores" onclick="goTo('proveedores')" role="button" tabindex="0" aria-label="Proveedores">
@@ -234,7 +395,73 @@
 
   <!-- ═══════════════ INVENTARIO ═══════════════ -->
   <div class="page" id="page-inventario">
-    <h1 class="page-title">Medicamentos</h1>
+    <h1 class="page-title">Inventario</h1>
+    <div class="stats-row">
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <!-- boxes icon -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="#007A8E" stroke-width="1.8">
+            <path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/>
+            <polyline points="3.27 6.96 12 12.01 20.73 6.96"/>
+            <line x1="12" y1="22.08" x2="12" y2="12"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-text-label">Total Productos</div>
+          <div class="stat-value">1248</div>
+          <div class="stat-sub neutral">Todos los productos</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <!-- checkmark circle -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="#00b87a" stroke-width="2">
+            <path d="M22 11.08V12a10 10 0 11-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-text-label">En Stock</div>
+          <div class="stat-value">986</div>
+          <div class="stat-sub green">79,2% del total</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <!-- warning triangle -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="#d97706" stroke-width="2">
+            <path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/>
+            <line x1="12" y1="9" x2="12" y2="13"/>
+            <line x1="12" y1="17" x2="12.01" y2="17"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-text-label">Stock Bajo</div>
+          <div class="stat-value">152</div>
+          <div class="stat-sub orange">Requieren reposición</div>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon-wrap">
+          <!-- x circle -->
+          <svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
+          </svg>
+        </div>
+        <div>
+          <div class="stat-text-label">Sin Stock</div>
+          <div class="stat-value">110</div>
+          <div class="stat-sub red">No Disponibles</div>
+        </div>
+      </div>
+
+    </div>
     <div class="card">
       <div class="inv-toolbar">
         <input class="search-input" type="search" placeholder="Buscar medicamento..." aria-label="Buscar medicamento">
@@ -852,7 +1079,7 @@
               <div class="menu-order-item" draggable="true" data-id="inventario">
                 <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>
                 <span class="menu-order-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/></svg></span>
-                <span class="menu-order-name">Medicamentos</span>
+                <span class="menu-order-name">Inventario</span>
               </div>
               <div class="menu-order-item" draggable="true" data-id="historial">
                 <span class="drag-handle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="5" r="1" fill="currentColor"/><circle cx="9" cy="12" r="1" fill="currentColor"/><circle cx="9" cy="19" r="1" fill="currentColor"/><circle cx="15" cy="5" r="1" fill="currentColor"/><circle cx="15" cy="12" r="1" fill="currentColor"/><circle cx="15" cy="19" r="1" fill="currentColor"/></svg></span>

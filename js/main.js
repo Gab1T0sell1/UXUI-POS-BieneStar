@@ -41,7 +41,7 @@ const pageLabels = {
     // 4. Configuración de nombres e iconos para la pestaña estilo Chrome
     const pageConfig = {
         'dashboard':  { text: 'Inicio', icon: '🏠' },
-        'inventario': { text: 'Medicamentos', icon: '📦' },
+        'inventario': { text: 'Inventario', icon: '📦' },
         'historial':  { text: 'Historial De Ventas', icon: '📋' },
         'reportes':   { text: 'Reportes', icon: '📊' },
         'configuracion': {text: 'Configuración', icon: '⚙️'},
@@ -1065,4 +1065,236 @@ function validarMatriculaReal(id) {
 
         showToast(`📡 SISA: Matrícula ${matriculaInput.value} habilitada · ${nombreAleatorio}`, 'success');
     }, 1200); // 1.2 segundos de delay ficticio de red
+}
+/* ══════════════════════════════════════
+   MOBILE SIDEBAR DRAWER
+   Agregar esto al final de main.js
+══════════════════════════════════════ */
+
+// Crear overlay si no existe
+(function initMobileSidebar() {
+  // Crear overlay
+  let overlay = document.getElementById('sidebar-overlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'sidebar-overlay';
+    overlay.className = 'sidebar-overlay';
+    overlay.addEventListener('click', closeMobileSidebar);
+    document.body.appendChild(overlay);
+  }
+
+  // Crear botón hamburger mobile en topstrip (si no existe)
+  let mobileBtn = document.getElementById('mobile-menu-btn');
+  if (!mobileBtn) {
+    const topstrip = document.querySelector('.topstrip');
+    if (topstrip) {
+      mobileBtn = document.createElement('button');
+      mobileBtn.id = 'mobile-menu-btn';
+      mobileBtn.className = 'mobile-menu-btn';
+      mobileBtn.setAttribute('aria-label', 'Abrir menú');
+      mobileBtn.setAttribute('title', 'Menú');
+      mobileBtn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+        <line x1="3" y1="7" x2="21" y2="7"/>
+        <line x1="3" y1="12" x2="21" y2="12"/>
+        <line x1="3" y1="17" x2="21" y2="17"/>
+      </svg>`;
+      mobileBtn.addEventListener('click', toggleMobileSidebar);
+      // Insertar al principio del topstrip
+      topstrip.insertBefore(mobileBtn, topstrip.firstChild);
+    }
+  }
+})();
+
+function toggleMobileSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  const isOpen = sidebar.classList.contains('mobile-open');
+  if (isOpen) {
+    closeMobileSidebar();
+  } else {
+    sidebar.classList.add('mobile-open');
+    overlay.classList.add('show');
+    document.body.style.overflow = 'hidden'; // previene scroll del body
+  }
+}
+
+function closeMobileSidebar() {
+  const sidebar = document.getElementById('sidebar');
+  const overlay = document.getElementById('sidebar-overlay');
+  sidebar.classList.remove('mobile-open');
+  overlay.classList.remove('show');
+  document.body.style.overflow = '';
+}
+
+// Cerrar sidebar mobile al navegar
+const _originalGoTo = typeof goTo === 'function' ? goTo : null;
+if (_originalGoTo) {
+  // Wrap goTo para cerrar sidebar en mobile
+  const _goToWrapped = goTo;
+  window.goTo = function(page) {
+    _goToWrapped(page);
+    if (window.innerWidth <= 640) {
+      closeMobileSidebar();
+    }
+  };
+}
+
+// Cerrar con ESC en mobile
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape' && window.innerWidth <= 640) {
+    closeMobileSidebar();
+  }
+});
+
+/* ══════════════════════════════════════
+   LOGIN — BieneStar
+   Usuario: mario | Contraseña: 1234
+══════════════════════════════════════ */
+(function initLogin() {
+  // Si ya hay sesión guardada, saltar login directamente
+  const saved = localStorage.getItem('bs-remember-user');
+  if (saved === 'mario') {
+    document.getElementById('login-screen').style.display = 'none';
+    if (saved) document.getElementById('input-user').value = saved;
+    return;
+  }
+
+  // Pre-fill usuario si estaba guardado
+  const savedUser = localStorage.getItem('bs-remember-user');
+  if (savedUser) {
+    const inputUser = document.getElementById('input-user');
+    if (inputUser) inputUser.value = savedUser;
+    const rememberChk = document.getElementById('login-remember');
+    if (rememberChk) rememberChk.checked = true;
+  }
+})();
+
+const LOGIN_USER = 'mario';
+const LOGIN_PASS = '1234';
+
+function loginSetError(fieldId, errorTextId, msg) {
+  document.getElementById(fieldId).classList.add('has-error');
+  if (msg) document.getElementById(errorTextId).textContent = msg;
+}
+function loginClearError(fieldId) {
+  document.getElementById(fieldId).classList.remove('has-error');
+}
+function loginShowAlert(html, type = 'error') {
+  const banner = document.getElementById('login-alert');
+  const text   = document.getElementById('login-alert-text');
+  banner.className = 'login-alert ' + type + ' show';
+  const icons = {
+    error:   '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+    success: '<polyline points="20 6 9 17 4 12"/>',
+    info:    '<circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/>',
+  };
+  banner.querySelector('svg').innerHTML = icons[type] || icons.error;
+  text.innerHTML = html;
+  if (type === 'error') {
+    banner.style.animation = 'none';
+    void banner.offsetWidth;
+    banner.style.animation = '';
+  }
+}
+function loginHideAlert() {
+  const b = document.getElementById('login-alert');
+  if (b) b.classList.remove('show');
+}
+
+let loginPassVisible = false;
+function loginTogglePass() {
+  loginPassVisible = !loginPassVisible;
+  const input = document.getElementById('input-pass');
+  const icon  = document.getElementById('login-eye-icon');
+  input.type = loginPassVisible ? 'text' : 'password';
+  icon.innerHTML = loginPassVisible
+    ? '<path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/>'
+    : '<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>';
+}
+
+document.getElementById('input-user').addEventListener('input', function () {
+  loginClearError('field-user');
+  loginHideAlert();
+  this.style.borderColor = (this.value.toLowerCase() === LOGIN_USER) ? '#00925e' : '';
+});
+document.getElementById('input-pass').addEventListener('input', function () {
+  loginClearError('field-pass');
+  loginHideAlert();
+});
+
+document.getElementById('login-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+  loginHideAlert();
+  const user = document.getElementById('input-user').value.trim();
+  const pass = document.getElementById('input-pass').value;
+  const btn  = document.getElementById('login-submit-btn');
+
+  loginClearError('field-user');
+  loginClearError('field-pass');
+
+  let valid = true;
+  if (!user) { loginSetError('field-user', 'error-user-text', 'Ingresá tu nombre de usuario'); valid = false; }
+  if (!pass) { loginSetError('field-pass', 'error-pass-text', 'Ingresá tu contraseña'); valid = false; }
+  if (!valid) return;
+
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  setTimeout(function () {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+
+    const userOk = user.toLowerCase() === LOGIN_USER;
+    const passOk = pass === LOGIN_PASS;
+
+    if (userOk && passOk) {
+      loginShowAlert('<strong>¡Bienvenido, Mario!</strong>Ingresando al sistema…', 'success');
+      btn.style.background = '#00925e';
+      if (document.getElementById('login-remember').checked) {
+        localStorage.setItem('bs-remember-user', user);
+      } else {
+        localStorage.removeItem('bs-remember-user');
+      }
+      setTimeout(function () {
+        const screen = document.getElementById('login-screen');
+        screen.classList.add('fade-out');
+        setTimeout(() => screen.style.display = 'none', 400);
+      }, 1000);
+
+    } else if (!userOk) {
+      loginSetError('field-user', 'error-user-text', 'Ese usuario no existe en el sistema');
+      loginShowAlert('<strong>Usuario no encontrado</strong>El usuario "<em>' + user + '</em>" no tiene acceso a BieneStar.', 'error');
+    } else {
+      loginSetError('field-pass', 'error-pass-text', 'La contraseña no es correcta');
+      loginShowAlert('<strong>Contraseña incorrecta</strong>Revisá que no tengas el Bloq Mayús activado.', 'error');
+    }
+  }, 900);
+});
+
+function loginShowRecovery() {
+  document.getElementById('login-main').classList.add('hide');
+  document.getElementById('login-recovery').classList.add('show');
+}
+function loginShowMain() {
+  document.getElementById('login-main').classList.remove('hide');
+  document.getElementById('login-recovery').classList.remove('show');
+  loginHideAlert();
+}
+function loginSendRecovery() {
+  const email = document.getElementById('recovery-email').value.trim();
+  const btn   = document.getElementById('recovery-submit-btn');
+  if (!email || !email.includes('@')) {
+    document.getElementById('recovery-email').style.borderColor = '#fca5a5';
+    return;
+  }
+  document.getElementById('recovery-email').style.borderColor = '';
+  btn.classList.add('loading');
+  btn.disabled = true;
+  setTimeout(function () {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+    btn.style.background = '#00925e';
+    btn.querySelector('.login-btn-text').textContent = '¡Solicitud enviada!';
+    setTimeout(loginShowMain, 2000);
+  }, 1000);
 }
