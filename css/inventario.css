@@ -41,3 +41,55 @@
 .stock-ok  { background: #e6f9f0; color: #00925e; }
 .stock-low { background: #fff8e5; color: #d97706; }
 .stock-out { background: #fee2e2; color: #dc2626; }
+
+.stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+
+  .stat-card {
+    background: var(--surface-2);
+    border-radius: var(--radius);
+    padding: 16px 16px 10px;
+    box-shadow: var(--shadow);
+    display: flex; align-items: center; gap: 16px;
+    border: 1px solid #ebebeb;
+    transition: box-shadow .2s, transform .15s;
+  }
+  .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-1px); }
+
+  .stat-icon-wrap {
+    width: 45px; height: 45px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  /* icon colors per card */
+  .stat-card:nth-child(1) .stat-icon-wrap { background: #e8f4f6;border: 2px solid #5ab3c2;  }
+  .stat-card:nth-child(2) .stat-icon-wrap { background: #e6f9f0;border: 2px solid #4caf7a; }
+  .stat-card:nth-child(3) .stat-icon-wrap { background: #fff8e5; border: 2px solid #f4c542;}
+  .stat-card:nth-child(4) .stat-icon-wrap { background: #fdecea; border: 2px solid #e57373;}
+
+  .stat-icon-wrap svg, .stat-icon-wrap img { width: 28px; height: 28px; }
+
+  .stat-text-label {
+    font-size: 12px; font-weight: 600; color: #888;
+    text-transform: uppercase; letter-spacing: .4px;
+  }
+  .stat-value {
+    font-size: 24px; font-weight: 800; line-height: 1.1;
+    color: var(--text-main);
+  }
+  .stat-sub {
+    font-size: 12px; margin-top: 2px; font-weight: 500;
+  }
+  .stat-sub.neutral { color: #888; }
+  .stat-sub.green   { color: #00925e; }
+  .stat-sub.orange  { color: #d97706; }
+  .stat-sub.red     { color: #dc2626; }
+
+  /* left accent border per card */
+  .stat-card:nth-child(1) { border-left: 4px solid var(--primary); }
+  .stat-card:nth-child(2) { border-left: 4px solid #00b87a; }
+  .stat-card:nth-child(3) { border-left: 4px solid #d97706; }
+  .stat-card:nth-child(4) { border-left: 4px solid #dc2626; }
