@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="css/configuracion.css">
     <link rel="stylesheet" href="css/responsive.css">
     <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="css/reportes.css">
 
 </head>
 <body>
@@ -745,7 +746,7 @@
   </div>
 
   <!-- ═══════════════ REPORTES ═══════════════ -->
-  <div class="page" id="page-reportes">
+  <!-- <div class="page" id="page-reportes">
     <h1 class="page-title">Reportes</h1>
     <div class="hist-stats">
       <div class="hist-stat"><div class="hist-stat-label">Ventas mes</div><div class="hist-stat-val">$1.284.600</div><div class="hist-stat-sub">+14% vs mes ant.</div></div>
@@ -768,6 +769,425 @@
       </div>
       <div class="chart-legend"><span><span class="legend-dot" style="background:var(--secondary)"></span>Ventas</span><span><span class="legend-dot" style="background:var(--primary)"></span>Día pico</span><span style="margin-left:auto;color:var(--text-sec);font-weight:600;">Total: $1.284.600</span></div>
     </div>
+  </div> -->
+  <!-- ═══════════════ REPORTES ═══════════════ -->
+  <div class="page" id="page-reportes">
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;">
+      <h1 class="page-title">Reportes</h1>
+      <div style="display:flex;gap:8px;align-items:center;">
+        <select class="filter-select" id="rep-period" onchange="renderReportes()" aria-label="Período">
+          <option value="mes">Este mes</option>
+          <option value="semana">Esta semana</option>
+          <option value="trimestre">Trimestre</option>
+          <option value="anio">Este año</option>
+        </select>
+        <button class="btn-secondary" onclick="showToast('Reporte exportado en PDF','success')">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Exportar PDF
+        </button>
+      </div>
+    </div>
+
+    <!-- KPI Row principal -->
+    <div class="rep-kpi-row">
+      <div class="rep-kpi-card">
+        <div class="rep-kpi-icon" style="background:rgba(0,122,142,.12);color:var(--primary);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        </div>
+        <div class="rep-kpi-body">
+          <div class="rep-kpi-label">Facturación total</div>
+          <div class="rep-kpi-val" id="rep-kpi-facturacion">$1.284.600</div>
+          <div class="rep-kpi-delta up" id="rep-kpi-facturacion-delta">▲ +14% vs período ant.</div>
+        </div>
+      </div>
+      <div class="rep-kpi-card">
+        <div class="rep-kpi-icon" style="background:rgba(0,155,159,.12);color:var(--secondary);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        </div>
+        <div class="rep-kpi-body">
+          <div class="rep-kpi-label">Transacciones</div>
+          <div class="rep-kpi-val" id="rep-kpi-tx">312</div>
+          <div class="rep-kpi-delta up" id="rep-kpi-tx-delta">▲ +8% vs período ant.</div>
+        </div>
+      </div>
+      <div class="rep-kpi-card">
+        <div class="rep-kpi-icon" style="background:rgba(0,146,94,.12);color:#00925e;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div class="rep-kpi-body">
+          <div class="rep-kpi-label">Ganancia neta</div>
+          <div class="rep-kpi-val" id="rep-kpi-ganancia">$389.200</div>
+          <div class="rep-kpi-delta up">▲ Margen 30,3%</div>
+        </div>
+      </div>
+      <div class="rep-kpi-card">
+        <div class="rep-kpi-icon" style="background:rgba(81,145,193,.12);color:#5191C1;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <div class="rep-kpi-body">
+          <div class="rep-kpi-label">Ticket promedio</div>
+          <div class="rep-kpi-val" id="rep-kpi-ticket">$4.117</div>
+          <div class="rep-kpi-delta up">▲ +12% vs período ant.</div>
+        </div>
+      </div>
+      <div class="rep-kpi-card">
+        <div class="rep-kpi-icon" style="background:rgba(217,119,6,.12);color:#d97706;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="3"/><path d="M9 12h6M12 9v6"/></svg>
+        </div>
+        <div class="rep-kpi-body">
+          <div class="rep-kpi-label">Unidades vendidas</div>
+          <div class="rep-kpi-val" id="rep-kpi-unidades">3.847</div>
+          <div class="rep-kpi-delta down">▼ −3% vs período ant.</div>
+        </div>
+      </div>
+      <div class="rep-kpi-card">
+        <div class="rep-kpi-icon" style="background:rgba(220,38,38,.1);color:#dc2626;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div class="rep-kpi-body">
+          <div class="rep-kpi-label">Stock crítico</div>
+          <div class="rep-kpi-val" style="color:#dc2626;">3 SKU</div>
+          <div class="rep-kpi-delta neutral">Requieren reposición</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila: Gráfico ventas + Métodos de pago -->
+    <div class="rep-row-2">
+      <!-- Gráfico de barras por día -->
+      <div class="card rep-chart-main">
+        <div class="card-title">
+          <span id="rep-chart-title">Ventas por día — Junio 2026</span>
+          <div style="display:flex;gap:6px;">
+            <button class="rep-tab-btn active" onclick="repSetView('daily',this)">Diario</button>
+            <button class="rep-tab-btn" onclick="repSetView('weekly',this)">Semanal</button>
+          </div>
+        </div>
+        <div class="rep-chart-area" id="rep-bars"></div>
+        <div class="chart-legend">
+          <span><span class="legend-dot" style="background:var(--secondary)"></span>Facturación</span>
+          <span><span class="legend-dot" style="background:var(--primary)"></span>Día/semana pico</span>
+          <span style="margin-left:auto;color:var(--text-sec);font-weight:600;" id="rep-chart-total">Total: $1.284.600</span>
+        </div>
+      </div>
+
+      <!-- Métodos de pago (donut simulado) -->
+      <div class="card rep-methods-card">
+        <div class="card-title">Métodos de pago</div>
+        <div class="rep-donut-wrap">
+          <svg viewBox="0 0 120 120" class="rep-donut-svg">
+            <!-- Efectivo 42% -->
+            <circle cx="60" cy="60" r="44" fill="none" stroke="var(--secondary)" stroke-width="18"
+              stroke-dasharray="116 160" stroke-dashoffset="0" transform="rotate(-90 60 60)"/>
+            <!-- Débito 31% -->
+            <circle cx="60" cy="60" r="44" fill="none" stroke="var(--primary)" stroke-width="18"
+              stroke-dasharray="86 160" stroke-dashoffset="-116" transform="rotate(-90 60 60)"/>
+            <!-- Crédito 27% -->
+            <circle cx="60" cy="60" r="44" fill="none" stroke="#5191C1" stroke-width="18"
+              stroke-dasharray="74 160" stroke-dashoffset="-202" transform="rotate(-90 60 60)"/>
+            <text x="60" y="56" text-anchor="middle" font-size="11" font-weight="800" fill="var(--text-main)">312</text>
+            <text x="60" y="70" text-anchor="middle" font-size="8" fill="var(--text-muted)">ventas</text>
+          </svg>
+        </div>
+        <div class="rep-method-legend">
+          <div class="rep-method-row"><span class="rep-method-dot" style="background:var(--secondary)"></span><span class="rep-method-name">Efectivo</span><span class="rep-method-pct">42%</span><span class="rep-method-amt">$539.532</span></div>
+          <div class="rep-method-row"><span class="rep-method-dot" style="background:var(--primary)"></span><span class="rep-method-name">Débito</span><span class="rep-method-pct">31%</span><span class="rep-method-amt">$398.226</span></div>
+          <div class="rep-method-row"><span class="rep-method-dot" style="background:#5191C1"></span><span class="rep-method-name">Crédito</span><span class="rep-method-pct">27%</span><span class="rep-method-amt">$346.842</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila: Top productos + Rendimiento vendedores -->
+    <div class="rep-row-2">
+      <!-- Top productos más vendidos -->
+      <div class="card">
+        <div class="card-title">
+          Top 5 productos más vendidos
+          <a class="card-title-link" onclick="goTo('inventario')">Ver inventario →</a>
+        </div>
+        <div class="rep-product-list">
+          <div class="rep-product-row">
+            <span class="rep-rank">1</span>
+            <div class="rep-product-info"><div class="rep-product-name">Paracetamol 500mg</div><div class="rep-product-cat">Analgésico</div></div>
+            <div class="rep-bar-mini-wrap"><div class="rep-bar-mini" style="width:100%;background:var(--primary)"></div></div>
+            <span class="rep-product-units">823 u.</span>
+            <span class="rep-product-amount">$312.740</span>
+          </div>
+          <div class="rep-product-row">
+            <span class="rep-rank">2</span>
+            <div class="rep-product-info"><div class="rep-product-name">Ibuprofeno 400mg</div><div class="rep-product-cat">Antiinflamatorio</div></div>
+            <div class="rep-bar-mini-wrap"><div class="rep-bar-mini" style="width:78%;background:var(--secondary)"></div></div>
+            <span class="rep-product-units">641 u.</span>
+            <span class="rep-product-amount">$544.850</span>
+          </div>
+          <div class="rep-product-row">
+            <span class="rep-rank">3</span>
+            <div class="rep-product-info"><div class="rep-product-name">Omeprazol 20mg</div><div class="rep-product-cat">Gastrointestinal</div></div>
+            <div class="rep-bar-mini-wrap"><div class="rep-bar-mini" style="width:57%;background:var(--secondary)"></div></div>
+            <span class="rep-product-units">469 u.</span>
+            <span class="rep-product-amount">$431.480</span>
+          </div>
+          <div class="rep-product-row">
+            <span class="rep-rank">4</span>
+            <div class="rep-product-info"><div class="rep-product-name">Losartán 50mg</div><div class="rep-product-cat">Cardiovascular</div></div>
+            <div class="rep-bar-mini-wrap"><div class="rep-bar-mini" style="width:44%;background:var(--accent)"></div></div>
+            <span class="rep-product-units">362 u.</span>
+            <span class="rep-product-amount">$597.300</span>
+          </div>
+          <div class="rep-product-row">
+            <span class="rep-rank">5</span>
+            <div class="rep-product-info"><div class="rep-product-name">Amoxicilina 500mg</div><div class="rep-product-cat">Antibiótico</div></div>
+            <div class="rep-bar-mini-wrap"><div class="rep-bar-mini" style="width:33%;background:var(--accent)"></div></div>
+            <span class="rep-product-units">271 u.</span>
+            <span class="rep-product-amount">$325.200</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rendimiento por vendedor -->
+      <div class="card">
+        <div class="card-title">
+          Rendimiento por vendedor
+          <a class="card-title-link" onclick="goTo('usuarios')">Ver usuarios →</a>
+        </div>
+        <div class="rep-seller-list">
+          <div class="rep-seller-row">
+            <div class="rep-seller-avatar" style="background:rgba(0,122,142,.18);color:var(--primary);">MC</div>
+            <div class="rep-seller-info">
+              <div class="rep-seller-name">María Constanzo</div>
+              <div class="rep-seller-progress-wrap"><div class="rep-seller-progress" style="width:100%;background:var(--primary)"></div></div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div class="rep-seller-val">142 ventas</div>
+              <div class="rep-seller-sub">$584.210</div>
+            </div>
+            <span class="rep-rank-badge top">🏆 Top</span>
+          </div>
+          <div class="rep-seller-row">
+            <div class="rep-seller-avatar" style="background:rgba(0,155,159,.18);color:var(--secondary);">JP</div>
+            <div class="rep-seller-info">
+              <div class="rep-seller-name">Juan Pérez</div>
+              <div class="rep-seller-progress-wrap"><div class="rep-seller-progress" style="width:68%;background:var(--secondary)"></div></div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div class="rep-seller-val">96 ventas</div>
+              <div class="rep-seller-sub">$395.400</div>
+            </div>
+          </div>
+          <div class="rep-seller-row">
+            <div class="rep-seller-avatar" style="background:rgba(81,145,193,.18);color:#5191C1;">LG</div>
+            <div class="rep-seller-info">
+              <div class="rep-seller-name">Laura Gómez</div>
+              <div class="rep-seller-progress-wrap"><div class="rep-seller-progress" style="width:52%;background:#5191C1"></div></div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div class="rep-seller-val">74 ventas</div>
+              <div class="rep-seller-sub">$304.990</div>
+            </div>
+          </div>
+          <div class="rep-seller-row">
+            <div class="rep-seller-avatar" style="background:rgba(0,95,112,.18);color:#005f70;">MB</div>
+            <div class="rep-seller-info">
+              <div class="rep-seller-name">Mario Bros</div>
+              <div class="rep-seller-progress-wrap"><div class="rep-seller-progress" style="width:28%;background:#005f70"></div></div>
+            </div>
+            <div style="text-align:right;flex-shrink:0;">
+              <div class="rep-seller-val">40 ventas</div>
+              <div class="rep-seller-sub">$152.800 <span style="font-size:10px;color:var(--primary);font-weight:700;">(tú)</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila: Cobertura de obra social + Categorías -->
+    <div class="rep-row-2">
+      <!-- Ventas por obra social / cobertura -->
+      <div class="card">
+        <div class="card-title">Ventas por cobertura médica</div>
+        <div class="rep-os-list">
+          <div class="rep-os-row">
+            <span class="rep-os-name">Sin cobertura</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:58%;background:var(--primary)"></div></div>
+            <span class="rep-os-pct">58%</span>
+            <span class="rep-os-amt">$744.668</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">PAMI</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:18%;background:var(--secondary)"></div></div>
+            <span class="rep-os-pct">18%</span>
+            <span class="rep-os-amt">$231.228</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">OSDE</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:12%;background:#5191C1"></div></div>
+            <span class="rep-os-pct">12%</span>
+            <span class="rep-os-amt">$154.152</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">IOMA</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:7%;background:var(--accent)"></div></div>
+            <span class="rep-os-pct">7%</span>
+            <span class="rep-os-amt">$89.922</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">Otros</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:5%;background:#aaa"></div></div>
+            <span class="rep-os-pct">5%</span>
+            <span class="rep-os-amt">$64.630</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Facturación por categoría de producto -->
+      <div class="card">
+        <div class="card-title">Facturación por categoría</div>
+        <div class="rep-os-list">
+          <div class="rep-os-row">
+            <span class="rep-os-name">Analgésicos</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:34%;background:var(--primary)"></div></div>
+            <span class="rep-os-pct">34%</span>
+            <span class="rep-os-amt">$436.764</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">Cardiovascular</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:28%;background:#5191C1"></div></div>
+            <span class="rep-os-pct">28%</span>
+            <span class="rep-os-amt">$359.688</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">Gastrointestinal</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:18%;background:var(--secondary)"></div></div>
+            <span class="rep-os-pct">18%</span>
+            <span class="rep-os-amt">$231.228</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">Antibióticos</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:12%;background:var(--accent)"></div></div>
+            <span class="rep-os-pct">12%</span>
+            <span class="rep-os-amt">$154.152</span>
+          </div>
+          <div class="rep-os-row">
+            <span class="rep-os-name">Otros</span>
+            <div class="rep-os-bar-wrap"><div class="rep-os-bar" style="width:8%;background:#aaa"></div></div>
+            <span class="rep-os-pct">8%</span>
+            <span class="rep-os-amt">$102.768</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fila: Horario pico + Tabla resumen mensual comparativo -->
+    <div class="rep-row-2">
+      <!-- Heatmap horario de ventas -->
+      <div class="card">
+        <div class="card-title">Horario pico de ventas</div>
+        <div class="rep-heatmap">
+          <div class="rep-heatmap-row">
+            <span class="rep-heatmap-label">Lun</span>
+            <div class="rep-heatmap-cell" data-val="2" style="background:rgba(0,122,142,.1)"></div>
+            <div class="rep-heatmap-cell" data-val="4" style="background:rgba(0,122,142,.2)"></div>
+            <div class="rep-heatmap-cell" data-val="8" style="background:rgba(0,122,142,.45)"></div>
+            <div class="rep-heatmap-cell rep-peak" data-val="14" style="background:rgba(0,122,142,.8)"></div>
+            <div class="rep-heatmap-cell" data-val="10" style="background:rgba(0,122,142,.55)"></div>
+            <div class="rep-heatmap-cell" data-val="7" style="background:rgba(0,122,142,.38)"></div>
+            <div class="rep-heatmap-cell" data-val="3" style="background:rgba(0,122,142,.14)"></div>
+            <div class="rep-heatmap-cell" data-val="5" style="background:rgba(0,122,142,.25)"></div>
+            <div class="rep-heatmap-cell" data-val="2" style="background:rgba(0,122,142,.1)"></div>
+          </div>
+          <div class="rep-heatmap-row">
+            <span class="rep-heatmap-label">Mar</span>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.08)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.18)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.5)"></div>
+            <div class="rep-heatmap-cell rep-peak" style="background:rgba(0,122,142,.85)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.6)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.42)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.22)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.3)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.12)"></div>
+          </div>
+          <div class="rep-heatmap-row">
+            <span class="rep-heatmap-label">Mié</span>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.05)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.15)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.35)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.65)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.48)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.32)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.18)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.25)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.08)"></div>
+          </div>
+          <div class="rep-heatmap-row">
+            <span class="rep-heatmap-label">Jue</span>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.1)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.22)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.55)"></div>
+            <div class="rep-heatmap-cell rep-peak" style="background:rgba(0,122,142,.9)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.7)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.45)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.28)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.38)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.15)"></div>
+          </div>
+          <div class="rep-heatmap-row">
+            <span class="rep-heatmap-label">Vie</span>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.12)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.28)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.62)"></div>
+            <div class="rep-heatmap-cell rep-peak" style="background:rgba(0,122,142,.95)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.75)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.5)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.35)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.42)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.2)"></div>
+          </div>
+          <div class="rep-heatmap-row">
+            <span class="rep-heatmap-label">Sáb</span>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.18)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.38)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.72)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.85)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.55)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.35)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.22)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.12)"></div>
+            <div class="rep-heatmap-cell" style="background:rgba(0,122,142,.05)"></div>
+          </div>
+          <div class="rep-heatmap-hours">
+            <span></span>
+            <span>9h</span><span>10h</span><span>11h</span><span>12h</span>
+            <span>13h</span><span>14h</span><span>15h</span><span>16h</span><span>17h</span>
+          </div>
+        </div>
+        <div style="margin-top:10px;font-size:11.5px;color:var(--text-muted);display:flex;align-items:center;gap:6px;">
+          <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(0,122,142,.15)"></span>Bajo
+          <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(0,122,142,.55);margin-left:6px;"></span>Medio
+          <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:rgba(0,122,142,.95);margin-left:6px;"></span>Alto
+          <span style="margin-left:auto;font-weight:600;color:var(--primary);">Pico: Jue–Vie 12–13hs</span>
+        </div>
+      </div>
+
+      <!-- Comparativo mensual -->
+      <div class="card">
+        <div class="card-title">Comparativo mensual 2026</div>
+        <table style="min-width:unset;">
+          <thead><tr>
+            <th>Mes</th><th>Facturación</th><th>Tx.</th><th>Ticket prom.</th><th>Var.</th>
+          </tr></thead>
+          <tbody>
+            <tr><td><strong>Junio</strong></td><td class="monto">$1.284.600</td><td>312</td><td>$4.117</td><td><span class="rep-delta up">▲ +14%</span></td></tr>
+            <tr><td>Mayo</td><td>$1.126.300</td><td>289</td><td>$3.897</td><td><span class="rep-delta up">▲ +8%</span></td></tr>
+            <tr><td>Abril</td><td>$1.042.100</td><td>271</td><td>$3.845</td><td><span class="rep-delta up">▲ +6%</span></td></tr>
+            <tr><td>Marzo</td><td>$983.400</td><td>258</td><td>$3.812</td><td><span class="rep-delta down">▼ −2%</span></td></tr>
+            <tr><td>Febrero</td><td>$1.003.800</td><td>263</td><td>$3.817</td><td><span class="rep-delta up">▲ +3%</span></td></tr>
+            <tr><td>Enero</td><td>$974.200</td><td>247</td><td>$3.944</td><td>—</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
   </div>
 
   <!-- ═══════════════ CONFIGURACIÓN ═══════════════ -->

@@ -1299,22 +1299,114 @@ function loginSendRecovery() {
   }, 1000);
 }
 
+// function logoutUser() {
+//   showToast('Sesión cerrada', 'info');
+//   setTimeout(() => {
+//     const overlay = document.getElementById('login-screen');
+//     if (overlay) {
+//       overlay.style.opacity = '0';
+//       overlay.style.pointerEvents = 'none';
+//       // reset form
+//       document.getElementById('input-user').value = '';
+//       document.getElementById('input-pass').value = '';
+//       overlay.style.display = 'flex';
+//       requestAnimationFrame(() => {
+//         overlay.style.transition = 'opacity .4s ease';
+//         overlay.style.opacity = '1';
+//         overlay.style.pointerEvents = '';
+//         overlay.classList.remove('fade-out');
+//       });
+//     }
+//   }, 800);
+// }
+
+/* ═══════════════════════════════════════
+   REPORTES — chart interactivity
+   PEGAR al final de main.js
+═══════════════════════════════════════ */
+const repData = {
+  daily: {
+    labels: ['1','2','3','4','5','6','7','8','9','10','11','12','13','14','15','16','17','18','19','20','21','22','23','24','25','26','27','28','29','30'],
+    values: [45,60,52,80,70,95,65,55,73,88,50,62,58,77,83,90,67,72,60,85,55,68,74,88,92,79,64,70,83,76],
+    title: 'Ventas por día — Junio 2026',
+    total: '$1.284.600'
+  },
+  weekly: {
+    labels: ['Sem 1','Sem 2','Sem 3','Sem 4'],
+    values: [70,88,75,95],
+    title: 'Ventas por semana — Junio 2026',
+    total: '$1.284.600'
+  }
+};
+
+let repCurrentView = 'daily';
+
+function renderReportes() {
+  renderRepBars(repCurrentView);
+}
+
+function repSetView(view, btn) {
+  repCurrentView = view;
+  document.querySelectorAll('.rep-tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderRepBars(view);
+}
+
+function renderRepBars(view) {
+  const data = repData[view];
+  const container = document.getElementById('rep-bars');
+  if (!container) return;
+  const maxVal = Math.max(...data.values);
+  const maxH = 130;
+  container.innerHTML = data.labels.map((label, i) => {
+    const h = Math.round((data.values[i] / maxVal) * maxH);
+    const isPeak = data.values[i] === maxVal;
+    return `<div class="bar-wrap">
+      <div class="bar${isPeak ? ' highlight' : ''}" style="height:${h}px" title="${label}: $${data.values[i].toLocaleString()}"></div>
+      <span class="bar-label">${label}</span>
+    </div>`;
+  }).join('');
+  const titleEl = document.getElementById('rep-chart-title');
+  if (titleEl) titleEl.textContent = data.title;
+  const totalEl = document.getElementById('rep-chart-total');
+  if (totalEl) totalEl.textContent = 'Total: ' + data.total;
+}
+
+// Renderizar al entrar a la página de reportes
+const _origGoTo = window.goTo;
+window.goTo = function(page) {
+  _origGoTo(page);
+  if (page === 'reportes') renderRepBars(repCurrentView);
+};
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderRepBars('daily');
+});
+
+/* ═══════════════════════════════════════
+   LOGOUT — vuelve a la pantalla de login
+═══════════════════════════════════════ */
 function logoutUser() {
   showToast('Sesión cerrada', 'info');
   setTimeout(() => {
+    // Limpiar campos del formulario
+    const inputUser = document.getElementById('input-user');
+    const inputPass = document.getElementById('input-pass');
+    if (inputUser) inputUser.value = '';
+    if (inputPass) inputPass.value = '';
+
+    // Mostrar el overlay de login con animación
     const overlay = document.getElementById('login-screen');
     if (overlay) {
       overlay.style.opacity = '0';
-      overlay.style.pointerEvents = 'none';
-      // reset form
-      document.getElementById('input-user').value = '';
-      document.getElementById('input-pass').value = '';
       overlay.style.display = 'flex';
+      overlay.classList.remove('fade-out');
       requestAnimationFrame(() => {
-        overlay.style.transition = 'opacity .4s ease';
-        overlay.style.opacity = '1';
-        overlay.style.pointerEvents = '';
-        overlay.classList.remove('fade-out');
+        requestAnimationFrame(() => {
+          overlay.style.transition = 'opacity .4s ease';
+          overlay.style.opacity = '1';
+          overlay.style.pointerEvents = '';
+        });
       });
     }
   }, 800);

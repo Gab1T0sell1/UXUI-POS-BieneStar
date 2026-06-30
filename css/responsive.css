@@ -115,12 +115,15 @@
   .chart-card   { grid-column: 1; grid-row: unset; }
   .kpi-card     { grid-column: 1; grid-row: unset; }
   .activity-card{ grid-column: 1; grid-row: unset; }
-  .sales-card   { grid-column: 1; grid-row: unset; }
-
-  /* Stats: 1 columna */
-  .stats-row { flex-direction: column; }
-  .stats-row .stat-card { flex: 1 1 100%; }
-
+  .sales-card  { grid-column: 1 / 3; grid-row: 4; }
+ 
+  /* Y AGREGÁ estas dos líneas justo debajo, dentro del mismo @media: */
+  .stats-row { flex-wrap: wrap; }
+  .stats-row .stat-card { flex: 1 1 calc(50% - 7px); }
+ 
+.stats-row { flex-wrap: wrap; }
+  .stats-row .stat-card { flex: 1 1 calc(50% - 7px); min-width: 0; }
+ 
   /* Historial: 1 columna */
   .hist-stats { flex-direction: column; }
   .hist-stat  { flex: 1 1 100%; }
