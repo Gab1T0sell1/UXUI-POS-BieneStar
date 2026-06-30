@@ -192,10 +192,21 @@
   </div>
 
   <nav class="sidebar-nav" id="sidebar-nav" aria-label="Menú principal">
-    <div class="hamburger"  onclick="toggleSidebar()" title="Contraer menú (Ctrl+B)" role="button" tabindex="0" aria-label="Contraer menú">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
-      <span class="nav-label">Menú</span>
-    </div>
+   <div
+      class="nav-item hamburger"
+      onclick="toggleSidebar()"
+      title="Contraer menú (Ctrl+B)"
+      role="button"
+      tabindex="0"
+      aria-label="Contraer menú"
+    >
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+      <line x1="3" y1="7" x2="21" y2="7"/>
+      <line x1="3" y1="12" x2="21" y2="12"/>
+      <line x1="3" y1="17" x2="21" y2="17"/>
+    </svg>
+    <span class="nav-label">Menú</span>
+  </div>
     <div class="nav-section-label">Principal</div>
     <div class="nav-item active" data-page="dashboard" onclick="goTo('dashboard')" role="button" tabindex="0" aria-label="Inicio">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
