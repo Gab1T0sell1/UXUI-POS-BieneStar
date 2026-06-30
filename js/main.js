@@ -1298,3 +1298,24 @@ function loginSendRecovery() {
     setTimeout(loginShowMain, 2000);
   }, 1000);
 }
+
+function logoutUser() {
+  showToast('Sesión cerrada', 'info');
+  setTimeout(() => {
+    const overlay = document.getElementById('login-screen');
+    if (overlay) {
+      overlay.style.opacity = '0';
+      overlay.style.pointerEvents = 'none';
+      // reset form
+      document.getElementById('input-user').value = '';
+      document.getElementById('input-pass').value = '';
+      overlay.style.display = 'flex';
+      requestAnimationFrame(() => {
+        overlay.style.transition = 'opacity .4s ease';
+        overlay.style.opacity = '1';
+        overlay.style.pointerEvents = '';
+        overlay.classList.remove('fade-out');
+      });
+    }
+  }, 800);
+}
