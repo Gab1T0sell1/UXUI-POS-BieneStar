@@ -361,33 +361,6 @@
           </tbody>
         </table>
       </div>
-      <!-- Cobertura de Obra Social -->
-      <div class="card">
-        <div class="card-title" style="margin-bottom: 8px;">
-          <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-weight:700;">
-            <input type="checkbox" id="tiene-obra-social" onchange="toggleObraSocial(this)" style="width: 16px; height: 16px; accent-color: var(--primary);">            ¿Aplica Obra Social / Cobertura?
-          </label>
-        </div>
-        <!-- Contenedor que aparece al rellenar -->
-        <div id="obra-wrap" style="display:none; margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--border);">
-          <div class="client-row" style="margin-bottom: 0;">
-            <div>
-              <span class="label-sm">Seleccionar Obra Social</span>
-              <select class="form-select">
-                <option>OSDE</option>
-                <option>Swiss Medical</option>
-                <option>PAMI</option>
-                <option>IOMA</option>
-                <option>Galeno</option>
-              </select>
-            </div>
-            <div>
-              <span class="label-sm">N° de afiliado</span>
-              <input type="text" class="form-input" placeholder="Número de afiliado" />
-            </div>
-          </div>
-        </div>
-      </div>
       <!-- Validación de Receta (Dinámico) -->
       <div class="card" id="card-receta" style="display: none; border-left: 4px solid #d97706; background: #fffcf5;">
         <div class="card-title" style="color: #b45309; margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
@@ -410,69 +383,95 @@
         <textarea class="form-input" id="nota-interna" style="height:70px;padding:10px;resize:none;" placeholder="Observaciones de la venta..."></textarea>
       </div>
   </div>
-<!-- PANEL DERECHO: Pago -->
-<div style="display:flex;flex-direction:column;gap:14px;">
+  <!-- PANEL DERECHO: Pago -->
+  <div style="display:flex; flex-direction:column; gap:14px;">
 
-  <!-- Método de Pago -->
-  <div class="card">
-    <div class="card-title">Método de pago</div>
-    <div class="method-grid">
-      <div class="method-opt active" onclick="selectMethod(this)" data-method="Efectivo">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
-        Efectivo
-      </div>
-      <div class="method-opt" onclick="selectMethod(this)" data-method="Tarjeta débito">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-        Tarjeta débito
-      </div>
-      <div class="method-opt" onclick="selectMethod(this)" data-method="Tarjeta crédito">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
-        Crédito
+    <div class="card">
+      <div class="card-title">Cobertura / Obra Social</div>
+      <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size: 12px; margin-bottom: 10px;">
+        <input type="checkbox" id="tiene-obra-social" onchange="toggleObraSocial(this)" style="width: 14px; height: 14px; accent-color: var(--primary);">
+        ¿Aplica cobertura?
+      </label>
+      <div id="obra-wrap" style="display:none; padding-top: 10px; border-top: 1px solid var(--border);">
+          <select class="form-select" style="margin-bottom: 8px;">
+              <option>OSDE</option>
+              <option>Swiss Medical</option>
+              <option>PAMI</option>
+              <option>IOMA</option>
+              <option>Galeno</option>
+          </select>
+          <input type="text" class="form-input" placeholder="N° de afiliado" />
       </div>
     </div>
 
-    <!-- Desplegable de Cuotas -->
-    <div id="cuotas-wrap" style="display:none; margin-top:14px;">
-      <span class="label-sm">Cuotas</span>
-      <select id="cuotas" class="form-select" onchange="renderCart()">
-        <option>1 cuota (sin interés)</option>
-        <option>3 cuotas</option>
-        <option>6 cuotas</option>
-        <option>12 cuotas</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Resumen de Venta -->
-  <div class="card">
-    <div class="card-title">Resumen de venta</div>
-    
-    <div class="mini-summary">
-      <div class="mini-row"><span>Subtotal</span><span id="subtotal-val">$0,00</span></div>
-      <div class="mini-row"><span>Descuento OS</span><span id="descuento-val" style="color:#dc2626;">— $0,00</span></div>
-      <div class="mini-row"><span>IVA (21%)</span><span id="iva-val">$0,00</span></div>
-      <div class="mini-total">
-        <span class="mini-total-label">Total</span>
-        <span class="mini-total-amount" id="total-val">$0,00</span>
-      </div>
-
-      <div id="resumen-credito-info" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); text-align: right;">
-        <div class="mini-row" style="font-weight: 600;"><span id="resumen-cuotas-detalle">1 cuota de</span><span id="resumen-cuotas-valor">$0,00</span></div>
-        <div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-top: 4px; display: flex; align-items: center; justify-content: flex-end; gap: 4px;">
-          💳 ¡Apoye la tarjeta sobre el posnet!
+    <div class="card">
+      <div class="card-title">Método de pago</div>
+      <div class="method-grid">
+        <div class="method-opt active" onclick="selectMethod(this)" data-method="Efectivo">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+          Efectivo
+        </div>
+        <div class="method-opt" onclick="selectMethod(this)" data-method="Tarjeta débito">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+          Tarjeta débito
+        </div>
+        <div class="method-opt" onclick="selectMethod(this)" data-method="Tarjeta crédito">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/><line x1="6" y1="15" x2="10" y2="15"/></svg>
+          Crédito
+        </div>
+        <div class="method-opt" onclick="selectMethod(this)" data-method="QR">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><path d="M14 14h7v7h-7z"/></svg>
+          QR
         </div>
       </div>
-    </div>
 
-    <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:8px;" onclick="openConfirmModal()">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
-      Ver resumen y confirmar
-    </button>
-    <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="resetCart()">Cancelar venta</button>
+      <div id="cuotas-wrap" style="display:none; margin-top:14px; margin-bottom:14px;">
+        <span class="label-sm">Cuotas</span>
+        <select id="cuotas" class="form-select" onchange="renderCart()">
+          <option>1 cuota (sin interés)</option>
+          <option>3 cuotas</option>
+          <option>6 cuotas</option>
+          <option>12 cuotas</option>
+        </select>
+      </div>
+    
+    <div class="card">
+      <div class="card-title">Resumen de venta</div>
+      
+      <div class="mini-summary">
+        <div class="mini-row"><span>Subtotal</span><span id="subtotal-val">$0,00</span></div>
+        <div class="mini-row"><span>Descuento OS</span><span id="descuento-val" style="color:#dc2626;">— $0,00</span></div>
+        <div class="mini-row"><span>IVA (21%)</span><span id="iva-val">$0,00</span></div>
+        <div class="mini-total">
+          <span class="mini-total-label">Total</span>
+          <span class="mini-total-amount" id="total-val">$0,00</span>
+        </div>
+
+        <div id="resumen-credito-info" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border); text-align: right;">
+          <div class="mini-row" style="font-weight: 600;"><span id="resumen-cuotas-detalle">1 cuota de</span><span id="resumen-cuotas-valor">$0,00</span></div>
+          <div style="font-size: 11px; color: var(--primary); font-weight: 700; margin-top: 4px; display: flex; align-items: center; justify-content: flex-end; gap: 4px;">
+            💳 ¡Apoye la tarjeta sobre el posnet!
+          </div>
+        </div>
+
+        <div id="qr-info" style="display: none; margin-top: 10px; padding-top: 8px; border-top: 1px dashed var(--border);">
+          <div style="font-size: 11px; color: var(--primary); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px;">
+            📱 ¡Escanea el código QR con tu billetera virtual!
+          </div>
+        </div>
+    </div>
+      </div>
+      <button class="btn-primary" style="width:100%;justify-content:center;margin-bottom:8px;" onclick="openConfirmModal()">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+        Ver resumen y confirmar
+      </button>
+      <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="resetCart()">Cancelar venta</button>
+    </div>
   </div>
 </div>
 </div>
-</div>
+
+
   <!-- ═══════════════ PROVEEDORES ═══════════════ -->
   <div class="page" id="page-proveedores">
     <h1 class="page-title">Proveedores</h1>

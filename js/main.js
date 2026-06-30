@@ -323,12 +323,6 @@ const PRODUCTS = [
     renderCart();
   }
   
-  function resetCart() {
-    cart = [];
-    renderCart();
-    showToast('Venta cancelada');
-  }
-  
 function renderCart() {
     // Freno de seguridad por si estamos en otra sección
     if (!document.getElementById('cart-tbody') || !document.getElementById('item-counter')) {
@@ -417,6 +411,7 @@ function selectMethod(el) {
     
     // El manejo de cuotas se queda acá para cuando eligen Crédito
     document.getElementById('cuotas-wrap').style.display = (selectedMethod === 'Tarjeta crédito') ? 'block' : 'none';
+    document.getElementById('qr-info').style.display = (selectedMethod === 'QR') ? 'block' : 'none';
     
     if (document.getElementById('modal-method')) {
         document.getElementById('modal-method').textContent = selectedMethod;
@@ -532,11 +527,31 @@ function updateTotals(subtotalOriginal, descuentoTotal) {
 }
   
   // Modificación extra para limpiar el input de descuento al reiniciar el carrito
-function resetCart() {
+  function resetCart() {
+    // 1. Vaciamos el carrito
     cart = [];
+    contadorRecetas = 0;
+    
+    // 2. Limpiamos manualmente el DOM de las recetas
+    const lista = document.getElementById('contenedor-recetas-lista');
+    const card = document.getElementById('card-receta');
+    
+    if (lista) lista.innerHTML = '';
+    if (card) {
+        card.style.display = 'none';
+        card.style.visibility = 'hidden'; // Forzamos ocultamiento visual extra
+    }
+
+    // 3. Renderizamos el carrito (que ahora está vacío)
     renderCart();
+
+    // 4. Parche de seguridad: un pequeño timeout para asegurar que nada lo reabrió
+    setTimeout(() => {
+        if (card) card.style.visibility = 'visible';
+    }, 100);
+
     showToast('Venta cancelada');
-}
+  }
 
 function openConfirmModal() {
     // --- NUEVO: Freno de seguridad para recetas ---
